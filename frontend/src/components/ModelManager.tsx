@@ -1,38 +1,31 @@
 import { Button } from "@/components/ui/button"
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import {
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
 } from "@/components/ui/pagination"
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table"
+import { Model, modelService } from "@/services/modelService"
 import { useEffect, useState } from "react"
-
-interface Model {
-  id: number
-  name: string
-  tag: string
-  status: string
-  createdAt: string
-}
 
 export function ModelManager() {
   const [models, setModels] = useState<Model[]>([])
@@ -47,10 +40,13 @@ export function ModelManager() {
 
   const loadData = async () => {
     try {
-      const response = await fetch(
-        `/api/models?page=${currentPage}&pageSize=${pageSize}&name=${searchName}&tag=${searchTag}&status=${searchStatus}`
-      )
-      const data = await response.json()
+      const data = await modelService.getModels({
+        page: currentPage,
+        pageSize,
+        name: searchName,
+        tag: searchTag,
+        status: searchStatus
+      })
       setModels(data.items)
       setTotal(data.total)
     } catch (error) {
@@ -88,7 +84,7 @@ export function ModelManager() {
   const handleDelete = async (id: number) => {
     if (window.confirm("确定要删除这个模型吗？")) {
       try {
-        await fetch(`/api/models/${id}`, { method: "DELETE" })
+        await modelService.deleteModel(id)
         loadData()
       } catch (error) {
         console.error("删除模型失败:", error)
@@ -100,24 +96,16 @@ export function ModelManager() {
     e.preventDefault()
     const formData = new FormData(e.target as HTMLFormElement)
     const data = {
-      name: formData.get("name"),
-      tag: formData.get("tag"),
-      status: formData.get("status"),
+      name: formData.get("name") as string,
+      tag: formData.get("tag") as string,
+      status: formData.get("status") as string,
     }
 
     try {
       if (editingModel) {
-        await fetch(`/api/models/${editingModel.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        })
+        await modelService.updateModel(editingModel.id, data)
       } else {
-        await fetch("/api/models", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        })
+        await modelService.createModel(data)
       }
       setIsDialogOpen(false)
       loadData()

@@ -24,16 +24,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import { Resource, resourceService } from "@/services/resourceService"
 import { useEffect, useState } from "react"
-
-interface Resource {
-  id: number
-  name: string
-  type: string
-  url: string
-  status: string
-  createdAt: string
-}
 
 export function ResourceManager() {
   const [resources, setResources] = useState<Resource[]>([])
@@ -48,10 +40,13 @@ export function ResourceManager() {
 
   const loadData = async () => {
     try {
-      const response = await fetch(
-        `/api/resources?page=${currentPage}&pageSize=${pageSize}&name=${searchName}&type=${searchType}&status=${searchStatus}`
-      )
-      const data = await response.json()
+      const data = await resourceService.getResources({
+        page: currentPage,
+        pageSize,
+        name: searchName,
+        type: searchType,
+        status: searchStatus
+      })
       setResources(data.items)
       setTotal(data.total)
     } catch (error) {
@@ -89,7 +84,7 @@ export function ResourceManager() {
   const handleDelete = async (id: number) => {
     if (window.confirm("确定要删除这个资源吗？")) {
       try {
-        await fetch(`/api/resources/${id}`, { method: "DELETE" })
+        await resourceService.deleteResource(id)
         loadData()
       } catch (error) {
         console.error("删除资源失败:", error)
@@ -101,25 +96,17 @@ export function ResourceManager() {
     e.preventDefault()
     const formData = new FormData(e.target as HTMLFormElement)
     const data = {
-      name: formData.get("name"),
-      type: formData.get("type"),
-      url: formData.get("url"),
-      status: formData.get("status"),
+      name: formData.get("name") as string,
+      type: formData.get("type") as string,
+      url: formData.get("url") as string,
+      status: formData.get("status") as string,
     }
 
     try {
       if (editingResource) {
-        await fetch(`/api/resources/${editingResource.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        })
+        await resourceService.updateResource(editingResource.id, data)
       } else {
-        await fetch("/api/resources", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        })
+        await resourceService.createResource(data)
       }
       setIsDialogOpen(false)
       loadData()

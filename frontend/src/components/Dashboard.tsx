@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Stats, statsService } from "@/services/statsService"
 import { useEffect, useState } from "react"
 import {
     CartesianGrid,
@@ -12,14 +13,6 @@ import {
     XAxis,
     YAxis,
 } from "recharts"
-
-interface Stats {
-  totalResources: number
-  totalModels: number
-  resourceTypes: { name: string; value: number }[]
-  modelTypes: { name: string; value: number }[]
-  dailyStats: { date: string; resources: number; models: number }[]
-}
 
 // 模拟数据
 const mockStats: Stats = {
@@ -56,8 +49,7 @@ export function Dashboard() {
     const fetchStats = async () => {
       try {
         setLoading(true)
-        const response = await fetch("/api/stats")
-        const data = await response.json()
+        const data = await statsService.getStats()
         setStats(data)
       } catch (error) {
         console.error("加载统计数据失败:", error)
@@ -75,7 +67,7 @@ export function Dashboard() {
 
   if (loading) {
     return (
-      <div className="container mx-auto py-10">
+      <div className="container mx-auto py-6">
         <div className="flex items-center justify-center h-[400px]">
           <div className="text-lg">加载中...</div>
         </div>
