@@ -1,0 +1,37 @@
+syntax = "v1"
+
+type BaseRequest {
+	Id     string `json:"id"` // 主键
+	Name string `json:"name"` // 名称
+}
+
+type BaseResponse {
+	Result string `json:"result"` // 结果
+}
+
+type URLRequest {
+	URL string `json:"url"` // URL链接
+}
+
+type URLResponse {
+	Tag []string `json:"tag"` // 标签
+	Title string `json:"title"` // 标题
+	Description string `json:"description"` // 描述
+	Link string `json:"link"` // 链接
+}
+
+@server (
+	// 代表当前 service 代码块下的路由生成代码时都会被放到 login 目录下
+	group: api
+	// 定义路由前缀为 "/wise"
+	prefix: /wise
+)
+service wise-api {
+	@doc "API基础"
+	@handler BaseHandler
+	post /api/base (BaseRequest) returns (BaseResponse)
+
+	@doc "URL链接识别"
+	@handler UrlHandler
+	post /api/url (URLRequest) returns (URLResponse)
+}

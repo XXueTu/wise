@@ -1,0 +1,19 @@
+### API调用
+POST http://127.0.0.1:8888/wise/api/base
+User-Agent: Apifox/1.0.0 (https://apifox.com)
+Content-Type: application/json
+
+{
+  "id": "10",
+  "name": "xue"
+}
+
+
+### URL链接识别
+POST http://127.0.0.1:8888/wise/api/url
+User-Agent: Apifox/1.0.0 (https://apifox.com)
+Content-Type: application/json
+
+{
+  "url": "https://mp.weixin.qq.com/s/PRTGGhH3iPBVU6Fv9MtdKg"
+}

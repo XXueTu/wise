@@ -1,0 +1,15 @@
+syntax = "v1"
+
+// 接口生成: goctl api go -api wise.api -dir ../ --home /Users/qiangyuecheng/.goctl/1.5.6 --style go_zero
+// goctl api go -api wise.api --style go_zero -dir .
+// 文档生成: goctl api doc -dir ../ -o ./doc
+/*
+自定义返回
+{
+	"code": 0,
+	"msg": "OK",
+	"data": {}
+}
+
+*/
+import "api/api.api"
