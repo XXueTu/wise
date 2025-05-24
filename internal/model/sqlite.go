@@ -39,8 +39,12 @@ func InitDB() {
 	// 创建
 	err = sqliteDB.ResetModel(context.Background(),
 		(*Resource)(nil),
+		(*Models)(nil),
 	)
 	if err != nil {
 		panic(err)
 	}
+
+	// 初始化表数据
+	(&Models{}).InitData()
 }

@@ -35,7 +35,7 @@ func (l *UrlLogic) Url(req *types.URLRequest) (resp *types.URLResponse, err erro
 		return resp, err
 	}
 
-	resource := model.ResourceModel(0, req.URL, title, content, "微信公众号")
+	resource := model.NewResource(req.URL, title, content, "微信公众号")
 	err = resource.Create(l.ctx, resource)
 	if err != nil {
 		return resp, err
