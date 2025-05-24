@@ -1,0 +1,111 @@
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 布局容器 */
+.layout-container {
+    height: 100vh;
+}
+
+/* 侧边栏样式 */
+.aside {
+    background-color: #001529;
+    color: #fff;
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+.logo {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.el-menu-vertical {
+    border-right: none;
+}
+
+/* 头部样式 */
+.header {
+    background-color: #fff;
+    border-bottom: 1px solid #e6e6e6;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.breadcrumb {
+    line-height: 60px;
+}
+
+/* 内容区样式 */
+.el-main {
+    background-color: #f0f2f5;
+    padding: 20px;
+}
+
+/* 卡片样式 */
+.el-card {
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.el-card__header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #ebeef5;
+    font-weight: 500;
+}
+
+/* 表格样式 */
+.el-table {
+    margin-top: 15px;
+}
+
+/* 表单样式 */
+.el-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* 按钮组样式 */
+.button-group {
+    margin-bottom: 20px;
+}
+
+/* 搜索表单样式 */
+.search-form {
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 4px;
+}
+
+/* 分页样式 */
+.pagination {
+    margin-top: 20px;
+    text-align: right;
+}
+
+/* 响应式布局 */
+@media screen and (max-width: 768px) {
+    .el-aside {
+        width: 64px !important;
+    }
+    
+    .el-main {
+        padding: 10px;
+    }
+} 
