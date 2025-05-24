@@ -1,0 +1,72 @@
+syntax = "v1"
+
+type Resource {
+	Id        int64  `json:"id"`         // 主键
+	URL       string `json:"url"`        // URL链接
+	Title     string `json:"title"`      // 标题
+	Content   string `json:"content"`    // 内容
+	Type      string `json:"type"`       // 类型
+	CreatedAt string `json:"created_at"` // 创建时间
+	UpdatedAt string `json:"updated_at"` // 更新时间
+}
+
+type CreateResourceRequest {
+	URL     string `json:"url"`     // URL链接
+	Title   string `json:"title"`   // 标题
+	Content string `json:"content"` // 内容
+	Type    string `json:"type"`    // 类型
+}
+
+type UpdateResourceRequest {
+	Id      int64  `json:"id"`      // 主键
+	URL     string `json:"url"`     // URL链接
+	Title   string `json:"title"`   // 标题
+	Content string `json:"content"` // 内容
+	Type    string `json:"type"`    // 类型
+}
+
+type DeleteResourceRequest {
+	Id int64 `form:"id"` // 主键
+}
+
+type GetResourceRequest {
+	Id int64 `form:"id"` // 主键
+}
+
+type ListResourceRequest {
+	Page     int64  `form:"page"`             // 页码
+	PageSize int64  `form:"page_size"`        // 每页数量
+	Type     string `form:"type,optional"`    // 类型（可选）
+	Keyword  string `form:"keyword,optional"` // 关键词（可选）
+}
+
+type ListResourceResponse {
+	Total     int64      `json:"total"`     // 总数
+	Resources []Resource `json:"resources"` // 资源列表
+}
+
+@server (
+	group: resources
+	prefix: /wise
+)
+service wise-api {
+	@doc "创建资源"
+	@handler CreateResourceHandler
+	post /api/resources (CreateResourceRequest) returns (Resource)
+
+	@doc "更新资源"
+	@handler UpdateResourceHandler
+	put /api/resources (UpdateResourceRequest) returns (Resource)
+
+	@doc "删除资源"
+	@handler DeleteResourceHandler
+	delete /api/resources (DeleteResourceRequest) returns (Resource)
+
+	@doc "获取单个资源"
+	@handler GetResourceHandler
+	get /api/resources (GetResourceRequest) returns (Resource)
+
+	@doc "分页查询资源列表"
+	@handler ListResourceHandler
+	get /api/resources/list (ListResourceRequest) returns (ListResourceResponse)
+}

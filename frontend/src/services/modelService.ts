@@ -2,49 +2,64 @@ import api from './api'
 
 export interface Model {
   id: number
-  name: string
-  tag: string
+  base_url: string
+  config: string
+  type: string
+  model_name: string
+  model_real_name: string
   status: string
-  createdAt: string
+  tag: string[]
+  created_at: string
+  updated_at: string
 }
 
 export interface ModelQuery {
   page: number
-  pageSize: number
-  name?: string
-  tag?: string
+  page_size: number
+  type?: string
   status?: string
+  tag?: string[]
+  keyword?: string
 }
 
 export interface ModelResponse {
-  items: Model[]
   total: number
+  models: Model[]
 }
 
 export const modelService = {
   // 获取模型列表
   getModels: async (query: ModelQuery): Promise<ModelResponse> => {
+    const { page, page_size, ...rest } = query
     const params = new URLSearchParams()
-    Object.entries(query).forEach(([key, value]) => {
-      if (value !== undefined && value !== '') {
-        params.append(key, String(value))
-      }
+    params.append('page', String(page))
+    params.append('page_size', String(page_size))
+    
+    // 将其他参数放在请求体中
+    return api.post('/models/list', {
+      ...rest,
+      page,
+      page_size
     })
-    return api.get(`/models?${params.toString()}`)
   },
 
   // 创建模型
-  createModel: async (data: Omit<Model, 'id' | 'createdAt'>): Promise<Model> => {
+  createModel: async (data: Omit<Model, 'id' | 'created_at' | 'updated_at'>): Promise<Model> => {
     return api.post('/models', data)
   },
 
   // 更新模型
   updateModel: async (id: number, data: Partial<Model>): Promise<Model> => {
-    return api.put(`/models/${id}`, data)
+    return api.put('/models', { id, ...data })
   },
 
   // 删除模型
-  deleteModel: async (id: number): Promise<void> => {
-    return api.delete(`/models/${id}`)
+  deleteModel: async (id: number): Promise<Model> => {
+    return api.delete('/models', { data: { id } })
+  },
+
+  // 获取单个模型
+  getModel: async (id: number): Promise<Model> => {
+    return api.get(`/models?id=${id}`)
   }
 } 

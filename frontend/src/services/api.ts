@@ -2,17 +2,25 @@ import axios from 'axios'
 
 // 创建 axios 实例
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: 'http://127.0.0.1:8888/wise/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
+    'Accept': 'application/json'
   },
+  withCredentials: false
 })
 
 // 请求拦截器
 api.interceptors.request.use(
   (config) => {
-    // 在这里可以添加认证信息等
+    // 打印请求信息
+    console.log('Request URL:', config.url)
+    console.log('Full URL:', `${config.baseURL}${config.url}`)
+    console.log('Request Method:', config.method)
+    console.log('Request Data:', config.data)
+    console.log('Request Params:', config.params)
+    console.log('Request Headers:', config.headers)
     return config
   },
   (error) => {
@@ -23,12 +31,33 @@ api.interceptors.request.use(
 // 响应拦截器
 api.interceptors.response.use(
   (response) => {
-    return response.data
+    const { code, msg, data } = response.data
+    
+    // 打印响应信息
+    console.log('Response:', response.data)
+    console.log('Response Headers:', response.headers)
+    
+    // 处理业务错误
+    if (code !== 0) {
+      return Promise.reject(new Error(msg || '请求失败'))
+    }
+    
+    // 返回数据部分
+    return data
   },
   (error) => {
-    // 统一错误处理
-    console.error('API Error:', error)
-    return Promise.reject(error)
+    // 打印错误信息
+    console.error('API Error:', error.response || error)
+    console.error('Error Headers:', error.response?.headers)
+    
+    // 处理 HTTP 错误
+    if (error.response) {
+      const { status, data } = error.response
+      return Promise.reject(new Error(data?.msg || `HTTP Error: ${status}`))
+    }
+    
+    // 处理网络错误
+    return Promise.reject(new Error(error.message || '网络错误'))
   }
 )
 

@@ -7,6 +7,8 @@ import (
 	"net/http"
 
 	api "github.com/XXueTu/wise/internal/handler/api"
+	models "github.com/XXueTu/wise/internal/handler/models"
+	resources "github.com/XXueTu/wise/internal/handler/resources"
 	"github.com/XXueTu/wise/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -26,6 +28,78 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/api/url",
 				Handler: api.UrlHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/wise"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 创建模型
+				Method:  http.MethodPost,
+				Path:    "/api/models",
+				Handler: models.CreateModelHandler(serverCtx),
+			},
+			{
+				// 更新模型
+				Method:  http.MethodPut,
+				Path:    "/api/models",
+				Handler: models.UpdateModelHandler(serverCtx),
+			},
+			{
+				// 删除模型
+				Method:  http.MethodDelete,
+				Path:    "/api/models",
+				Handler: models.DeleteModelHandler(serverCtx),
+			},
+			{
+				// 获取单个模型
+				Method:  http.MethodGet,
+				Path:    "/api/models",
+				Handler: models.GetModelHandler(serverCtx),
+			},
+			{
+				// 分页查询模型列表
+				Method:  http.MethodPost,
+				Path:    "/api/models/list",
+				Handler: models.ListModelHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/wise"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 创建资源
+				Method:  http.MethodPost,
+				Path:    "/api/resources",
+				Handler: resources.CreateResourceHandler(serverCtx),
+			},
+			{
+				// 更新资源
+				Method:  http.MethodPut,
+				Path:    "/api/resources",
+				Handler: resources.UpdateResourceHandler(serverCtx),
+			},
+			{
+				// 删除资源
+				Method:  http.MethodDelete,
+				Path:    "/api/resources",
+				Handler: resources.DeleteResourceHandler(serverCtx),
+			},
+			{
+				// 获取单个资源
+				Method:  http.MethodGet,
+				Path:    "/api/resources",
+				Handler: resources.GetResourceHandler(serverCtx),
+			},
+			{
+				// 分页查询资源列表
+				Method:  http.MethodGet,
+				Path:    "/api/resources/list",
+				Handler: resources.ListResourceHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/wise"),

@@ -33,21 +33,25 @@ export function ModelManager() {
   const [pageSize] = useState(10)
   const [total, setTotal] = useState(0)
   const [searchName, setSearchName] = useState("")
-  const [searchTag, setSearchTag] = useState("")
+  const [searchType, setSearchType] = useState("")
   const [searchStatus, setSearchStatus] = useState("")
+  const [searchTagInput, setSearchTagInput] = useState("")
+  const [searchTags, setSearchTags] = useState<string[]>([])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingModel, setEditingModel] = useState<Model | null>(null)
+  const [tagInput, setTagInput] = useState("")
 
   const loadData = async () => {
     try {
       const data = await modelService.getModels({
         page: currentPage,
-        pageSize,
-        name: searchName,
-        tag: searchTag,
-        status: searchStatus
+        page_size: pageSize,
+        type: searchType,
+        status: searchStatus,
+        tag: searchTags,
+        keyword: searchName
       })
-      setModels(data.items)
+      setModels(data.models)
       setTotal(data.total)
     } catch (error) {
       console.error("加载模型失败:", error)
@@ -56,7 +60,7 @@ export function ModelManager() {
 
   useEffect(() => {
     loadData()
-  }, [currentPage, pageSize, searchName, searchTag, searchStatus])
+  }, [currentPage, pageSize, searchName, searchType, searchStatus, searchTags])
 
   const handleSearch = () => {
     setCurrentPage(1)
@@ -65,19 +69,23 @@ export function ModelManager() {
 
   const handleReset = () => {
     setSearchName("")
-    setSearchTag("")
+    setSearchType("")
     setSearchStatus("")
+    setSearchTagInput("")
+    setSearchTags([])
     setCurrentPage(1)
     loadData()
   }
 
   const handleAdd = () => {
     setEditingModel(null)
+    setTagInput("")
     setIsDialogOpen(true)
   }
 
   const handleEdit = (model: Model) => {
     setEditingModel(model)
+    setTagInput(model.tag.join(", "))
     setIsDialogOpen(true)
   }
 
@@ -96,9 +104,13 @@ export function ModelManager() {
     e.preventDefault()
     const formData = new FormData(e.target as HTMLFormElement)
     const data = {
-      name: formData.get("name") as string,
-      tag: formData.get("tag") as string,
+      base_url: formData.get("base_url") as string,
+      config: formData.get("config") as string,
+      type: formData.get("type") as string,
+      model_name: formData.get("model_name") as string,
+      model_real_name: formData.get("model_real_name") as string,
       status: formData.get("status") as string,
+      tag: tagInput.split(",").map(tag => tag.trim()).filter(tag => tag !== "")
     }
 
     try {
@@ -114,6 +126,14 @@ export function ModelManager() {
     }
   }
 
+  const handleSearchTagChange = (value: string) => {
+    setSearchTagInput(value)
+    const tags = value.split(",")
+      .map(tag => tag.trim())
+      .filter(tag => tag !== "")
+    setSearchTags(tags)
+  }
+
   return (
     <div className="container mx-auto py-6">
       <div className="flex justify-between items-center mb-6">
@@ -125,15 +145,21 @@ export function ModelManager() {
             className="w-[200px]"
           />
           <Input
-            placeholder="模型类型"
-            value={searchTag}
-            onChange={(e) => setSearchTag(e.target.value)}
+            placeholder="类型"
+            value={searchType}
+            onChange={(e) => setSearchType(e.target.value)}
             className="w-[200px]"
           />
           <Input
             placeholder="状态"
             value={searchStatus}
             onChange={(e) => setSearchStatus(e.target.value)}
+            className="w-[200px]"
+          />
+          <Input
+            placeholder="标签（用逗号分隔）"
+            value={searchTagInput}
+            onChange={(e) => handleSearchTagChange(e.target.value)}
             className="w-[200px]"
           />
           <Button onClick={handleSearch}>搜索</Button>
@@ -148,9 +174,12 @@ export function ModelManager() {
         <TableHeader>
           <TableRow>
             <TableHead>ID</TableHead>
-            <TableHead>名称</TableHead>
-            <TableHead>标签</TableHead>
+            <TableHead>基础URL</TableHead>
+            <TableHead>模型名称</TableHead>
+            <TableHead>真实名称</TableHead>
+            <TableHead>类型</TableHead>
             <TableHead>状态</TableHead>
+            <TableHead>标签</TableHead>
             <TableHead>创建时间</TableHead>
             <TableHead>操作</TableHead>
           </TableRow>
@@ -160,10 +189,24 @@ export function ModelManager() {
             models.map((model) => (
               <TableRow key={model.id}>
                 <TableCell>{model.id}</TableCell>
-                <TableCell>{model.name}</TableCell>
-                <TableCell>{model.tag}</TableCell>
+                <TableCell>{model.base_url}</TableCell>
+                <TableCell>{model.model_name}</TableCell>
+                <TableCell>{model.model_real_name}</TableCell>
+                <TableCell>{model.type}</TableCell>
                 <TableCell>{model.status}</TableCell>
-                <TableCell>{model.createdAt}</TableCell>
+                <TableCell>
+                  <div className="flex flex-wrap gap-1">
+                    {model.tag.map((tag, index) => (
+                      <span
+                        key={index}
+                        className="px-2 py-1 bg-gray-100 rounded-full text-sm"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </TableCell>
+                <TableCell>{model.created_at}</TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"
@@ -184,7 +227,7 @@ export function ModelManager() {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={6} className="text-center">
+              <TableCell colSpan={9} className="text-center">
                 暂无数据
               </TableCell>
             </TableRow>
@@ -240,20 +283,47 @@ export function ModelManager() {
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <label htmlFor="name">名称</label>
+                <label htmlFor="base_url">基础URL</label>
                 <Input
-                  id="name"
-                  name="name"
-                  defaultValue={editingModel?.name}
+                  id="base_url"
+                  name="base_url"
+                  defaultValue={editingModel?.base_url}
                   required
                 />
               </div>
               <div className="grid gap-2">
-                <label htmlFor="tag">标签</label>
+                <label htmlFor="config">配置信息</label>
                 <Input
-                  id="tag"
-                  name="tag"
-                  defaultValue={editingModel?.tag}
+                  id="config"
+                  name="config"
+                  defaultValue={editingModel?.config}
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <label htmlFor="type">类型</label>
+                <Input
+                  id="type"
+                  name="type"
+                  defaultValue={editingModel?.type}
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <label htmlFor="model_name">模型名称</label>
+                <Input
+                  id="model_name"
+                  name="model_name"
+                  defaultValue={editingModel?.model_name}
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <label htmlFor="model_real_name">真实名称</label>
+                <Input
+                  id="model_real_name"
+                  name="model_real_name"
+                  defaultValue={editingModel?.model_real_name}
                   required
                 />
               </div>
@@ -263,6 +333,17 @@ export function ModelManager() {
                   id="status"
                   name="status"
                   defaultValue={editingModel?.status}
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <label htmlFor="tag">标签（用逗号分隔）</label>
+                <Input
+                  id="tag"
+                  name="tag"
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  placeholder="例如：标签1, 标签2, 标签3"
                   required
                 />
               </div>

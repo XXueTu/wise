@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/uptrace/bun"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 // Resource 资源模型
@@ -18,17 +19,6 @@ type Resource struct {
 	Type      string    `bun:"type,notnull" json:"type"`       // 资源类型（如：wechat, zhihu等）
 	CreatedAt time.Time `bun:"created_at,notnull,default:current_timestamp" json:"created_at"`
 	UpdatedAt time.Time `bun:"updated_at,notnull,default:current_timestamp" json:"updated_at"`
-}
-
-// ResourceList 资源列表返回结构
-type ResourceList struct {
-	Total int64       `json:"total"` // 总记录数
-	List  []*Resource `json:"list"`  // 资源列表
-}
-
-// TableName 返回表名
-func (r *Resource) TableName() string {
-	return "resources"
 }
 
 // BeforeCreate 创建前的钩子
@@ -45,57 +35,78 @@ func (r *Resource) BeforeUpdate(ctx context.Context) (context.Context, error) {
 	return ctx, nil
 }
 
+type ResourceModel struct {
+	db *bun.DB
+}
+
+func NewResourceModel(db *bun.DB) *ResourceModel {
+	return &ResourceModel{
+		db: db,
+	}
+}
+
+// ResourceList 资源列表返回结构
+type ResourceList struct {
+	Total int64       `json:"total"` // 总记录数
+	List  []*Resource `json:"list"`  // 资源列表
+}
+
+// TableName 返回表名
+func (r *ResourceModel) TableName() string {
+	return "resources"
+}
+
 // Create 创建资源
-func (r *Resource) Create(ctx context.Context, resource *Resource) error {
-	_, err := sqliteDB.NewInsert().Model(resource).Exec(ctx)
+func (r *ResourceModel) Create(ctx context.Context, resource *Resource) error {
+	_, err := r.db.NewInsert().Model(resource).Exec(ctx)
+	if err != nil {
+		logx.Error("Create error", err)
+	}
 	return err
 }
 
 // GetByURL 根据URL获取资源
-func (r *Resource) GetByURL(ctx context.Context, url string) (*Resource, error) {
+func (r *ResourceModel) GetByURL(ctx context.Context, url string) (*Resource, error) {
 	resource := new(Resource)
-	err := sqliteDB.NewSelect().
+	err := r.db.NewSelect().
 		Model(resource).
 		Where("url = ?", url).
 		Scan(ctx)
 	if err != nil {
+		logx.Error("GetByURL error", err)
 		return nil, err
 	}
 	return resource, nil
 }
 
 // Update 更新资源
-func (r *Resource) Update(ctx context.Context, resource *Resource) error {
-	_, err := sqliteDB.NewUpdate().
+func (r *ResourceModel) Update(ctx context.Context, resource *Resource) error {
+	_, err := r.db.NewUpdate().
 		Model(resource).
 		WherePK().
 		Exec(ctx)
+	if err != nil {
+		logx.Error("Update error", err)
+	}
 	return err
 }
 
 // Delete 删除资源
-func (r *Resource) Delete(ctx context.Context, id int64) error {
-	_, err := sqliteDB.NewDelete().
+func (r *ResourceModel) Delete(ctx context.Context, id int64) error {
+	_, err := r.db.NewDelete().
 		Model((*Resource)(nil)).
 		Where("id = ?", id).
 		Exec(ctx)
+	if err != nil {
+		logx.Error("Delete error", err)
+	}
 	return err
 }
 
-// NewResource 创建新的资源实例
-func NewResource(url, title, content, resourceType string) *Resource {
-	return &Resource{
-		URL:     url,
-		Title:   title,
-		Content: content,
-		Type:    resourceType,
-	}
-}
-
 // GetList 分页查询资源列表
-func (r *Resource) GetList(ctx context.Context, page, size int, title, resourceType string) (*ResourceList, error) {
+func (r *ResourceModel) GetList(ctx context.Context, page, size int, resourceType, title string) (*ResourceList, error) {
 	// 构建查询
-	query := sqliteDB.NewSelect().Model((*Resource)(nil))
+	query := r.db.NewSelect().Model((*Resource)(nil))
 
 	// 添加条件
 	if title != "" {
@@ -108,6 +119,7 @@ func (r *Resource) GetList(ctx context.Context, page, size int, title, resourceT
 	// 获取总记录数
 	total, err := query.Count(ctx)
 	if err != nil {
+		logx.Error("GetList total error", err)
 		return nil, err
 	}
 
@@ -119,6 +131,7 @@ func (r *Resource) GetList(ctx context.Context, page, size int, title, resourceT
 		Limit(size).
 		Scan(ctx, &resources)
 	if err != nil {
+		logx.Error("GetList scan error", err)
 		return nil, err
 	}
 
@@ -128,8 +141,11 @@ func (r *Resource) GetList(ctx context.Context, page, size int, title, resourceT
 	}, nil
 }
 
-func (r *Resource) Get(ctx context.Context, id int64) (*Resource, error) {
+func (r *ResourceModel) Get(ctx context.Context, id int64) (*Resource, error) {
 	var resource Resource
-	err := sqliteDB.NewSelect().Model(&resource).Where("id = ?", id).Scan(ctx)
+	err := r.db.NewSelect().Model(&resource).Where("id = ?", id).Scan(ctx)
+	if err != nil {
+		logx.Error("Get error", err)
+	}
 	return &resource, err
 }

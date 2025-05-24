@@ -1,0 +1,83 @@
+syntax = "v1"
+
+type Model {
+	Id            int64    `json:"id"`              // 主键
+	BaseUrl       string   `json:"base_url"`        // 基础URL
+	Config        string   `json:"config"`          // 配置信息
+	Type          string   `json:"type"`            // 类型
+	ModelName     string   `json:"model_name"`      // 模型名称
+	ModelRealName string   `json:"model_real_name"` // 模型真实名称
+	Status        string   `json:"status"`          // 状态
+	Tag           []string `json:"tag"`             // 标签
+	CreatedAt     string   `json:"created_at"`      // 创建时间
+	UpdatedAt     string   `json:"updated_at"`      // 更新时间
+}
+
+type CreateModelRequest {
+	BaseUrl       string   `json:"base_url"`        // 基础URL
+	Config        string   `json:"config"`          // 配置信息
+	Type          string   `json:"type"`            // 类型
+	ModelName     string   `json:"model_name"`      // 模型名称
+	ModelRealName string   `json:"model_real_name"` // 模型真实名称
+	Status        string   `json:"status"`          // 状态
+	Tag           []string `json:"tag"`             // 标签
+}
+
+type UpdateModelRequest {
+	Id            int64    `json:"id"`              // 主键
+	BaseUrl       string   `json:"base_url"`        // 基础URL
+	Config        string   `json:"config"`          // 配置信息
+	Type          string   `json:"type"`            // 类型
+	ModelName     string   `json:"model_name"`      // 模型名称
+	ModelRealName string   `json:"model_real_name"` // 模型真实名称
+	Status        string   `json:"status"`          // 状态
+	Tag           []string `json:"tag"`             // 标签
+}
+
+type DeleteModelRequest {
+	Id int64 `form:"id"` // 主键
+}
+
+type GetModelRequest {
+	Id int64 `form:"id"` // 主键
+}
+
+type ListModelRequest {
+	Page     int64    `json:"page"`             // 页码
+	PageSize int64    `json:"page_size"`        // 每页数量
+	Type     string   `json:"type,optional"`    // 类型（可选）
+	Status   string   `json:"status,optional"`  // 状态（可选）
+	Tag      []string `json:"tag,optional"`     // 标签（可选）
+	Keyword  string   `json:"keyword,optional"` // 关键词（可选）
+}
+
+type ListModelResponse {
+	Total  int64   `json:"total"`  // 总数
+	Models []Model `json:"models"` // 模型列表
+}
+
+@server (
+	group: models
+	prefix: /wise
+)
+service wise-api {
+	@doc "创建模型"
+	@handler CreateModelHandler
+	post /api/models (CreateModelRequest) returns (Model)
+
+	@doc "更新模型"
+	@handler UpdateModelHandler
+	put /api/models (UpdateModelRequest) returns (Model)
+
+	@doc "删除模型"
+	@handler DeleteModelHandler
+	delete /api/models (DeleteModelRequest) returns (Model)
+
+	@doc "获取单个模型"
+	@handler GetModelHandler
+	get /api/models (GetModelRequest) returns (Model)
+
+	@doc "分页查询模型列表"
+	@handler ListModelHandler
+	post /api/models/list (ListModelRequest) returns (ListModelResponse)
+}

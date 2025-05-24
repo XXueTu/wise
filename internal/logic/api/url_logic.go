@@ -35,8 +35,12 @@ func (l *UrlLogic) Url(req *types.URLRequest) (resp *types.URLResponse, err erro
 		return resp, err
 	}
 
-	resource := model.NewResource(req.URL, title, content, "微信公众号")
-	err = resource.Create(l.ctx, resource)
+	err = l.svcCtx.ResourceModel.Create(l.ctx, &model.Resource{
+		URL:     req.URL,
+		Title:   title,
+		Content: content,
+		Type:    "微信公众号",
+	})
 	if err != nil {
 		return resp, err
 	}

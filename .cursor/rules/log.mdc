@@ -1,0 +1,6 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+1. 要在有发生err的地方打印 logx.Error日志,参数规范,要发方法名，参数，错误都打印出来

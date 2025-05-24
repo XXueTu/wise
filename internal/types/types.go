@@ -12,6 +12,88 @@ type BaseResponse struct {
 	Result string `json:"result"` // 结果
 }
 
+type CreateModelRequest struct {
+	BaseUrl       string   `json:"base_url"`        // 基础URL
+	Config        string   `json:"config"`          // 配置信息
+	Type          string   `json:"type"`            // 类型
+	ModelName     string   `json:"model_name"`      // 模型名称
+	ModelRealName string   `json:"model_real_name"` // 模型真实名称
+	Status        string   `json:"status"`          // 状态
+	Tag           []string `json:"tag"`             // 标签
+}
+
+type CreateResourceRequest struct {
+	URL     string `json:"url"`     // URL链接
+	Title   string `json:"title"`   // 标题
+	Content string `json:"content"` // 内容
+	Type    string `json:"type"`    // 类型
+}
+
+type DeleteModelRequest struct {
+	Id int64 `form:"id"` // 主键
+}
+
+type DeleteResourceRequest struct {
+	Id int64 `form:"id"` // 主键
+}
+
+type GetModelRequest struct {
+	Id int64 `form:"id"` // 主键
+}
+
+type GetResourceRequest struct {
+	Id int64 `form:"id"` // 主键
+}
+
+type ListModelRequest struct {
+	Page     int64    `json:"page"`             // 页码
+	PageSize int64    `json:"page_size"`        // 每页数量
+	Type     string   `json:"type,optional"`    // 类型（可选）
+	Status   string   `json:"status,optional"`  // 状态（可选）
+	Tag      []string `json:"tag,optional"`     // 标签（可选）
+	Keyword  string   `json:"keyword,optional"` // 关键词（可选）
+}
+
+type ListModelResponse struct {
+	Total  int64   `json:"total"`  // 总数
+	Models []Model `json:"models"` // 模型列表
+}
+
+type ListResourceRequest struct {
+	Page     int64  `form:"page"`             // 页码
+	PageSize int64  `form:"page_size"`        // 每页数量
+	Type     string `form:"type,optional"`    // 类型（可选）
+	Keyword  string `form:"keyword,optional"` // 关键词（可选）
+}
+
+type ListResourceResponse struct {
+	Total     int64      `json:"total"`     // 总数
+	Resources []Resource `json:"resources"` // 资源列表
+}
+
+type Model struct {
+	Id            int64    `json:"id"`              // 主键
+	BaseUrl       string   `json:"base_url"`        // 基础URL
+	Config        string   `json:"config"`          // 配置信息
+	Type          string   `json:"type"`            // 类型
+	ModelName     string   `json:"model_name"`      // 模型名称
+	ModelRealName string   `json:"model_real_name"` // 模型真实名称
+	Status        string   `json:"status"`          // 状态
+	Tag           []string `json:"tag"`             // 标签
+	CreatedAt     string   `json:"created_at"`      // 创建时间
+	UpdatedAt     string   `json:"updated_at"`      // 更新时间
+}
+
+type Resource struct {
+	Id        int64  `json:"id"`         // 主键
+	URL       string `json:"url"`        // URL链接
+	Title     string `json:"title"`      // 标题
+	Content   string `json:"content"`    // 内容
+	Type      string `json:"type"`       // 类型
+	CreatedAt string `json:"created_at"` // 创建时间
+	UpdatedAt string `json:"updated_at"` // 更新时间
+}
+
 type URLRequest struct {
 	URL string `json:"url"` // URL链接
 }
@@ -21,4 +103,23 @@ type URLResponse struct {
 	Title       string   `json:"title"`       // 标题
 	Description string   `json:"description"` // 描述
 	Link        string   `json:"link"`        // 链接
+}
+
+type UpdateModelRequest struct {
+	Id            int64    `json:"id"`              // 主键
+	BaseUrl       string   `json:"base_url"`        // 基础URL
+	Config        string   `json:"config"`          // 配置信息
+	Type          string   `json:"type"`            // 类型
+	ModelName     string   `json:"model_name"`      // 模型名称
+	ModelRealName string   `json:"model_real_name"` // 模型真实名称
+	Status        string   `json:"status"`          // 状态
+	Tag           []string `json:"tag"`             // 标签
+}
+
+type UpdateResourceRequest struct {
+	Id      int64  `json:"id"`      // 主键
+	URL     string `json:"url"`     // URL链接
+	Title   string `json:"title"`   // 标题
+	Content string `json:"content"` // 内容
+	Type    string `json:"type"`    // 类型
 }

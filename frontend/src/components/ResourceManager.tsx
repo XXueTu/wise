@@ -32,9 +32,8 @@ export function ResourceManager() {
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize] = useState(10)
   const [total, setTotal] = useState(0)
-  const [searchName, setSearchName] = useState("")
+  const [searchTitle, setSearchTitle] = useState("")
   const [searchType, setSearchType] = useState("")
-  const [searchStatus, setSearchStatus] = useState("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingResource, setEditingResource] = useState<Resource | null>(null)
 
@@ -42,12 +41,11 @@ export function ResourceManager() {
     try {
       const data = await resourceService.getResources({
         page: currentPage,
-        pageSize,
-        name: searchName,
+        page_size: pageSize,
         type: searchType,
-        status: searchStatus
+        keyword: searchTitle
       })
-      setResources(data.items)
+      setResources(data.resources)
       setTotal(data.total)
     } catch (error) {
       console.error("加载资源失败:", error)
@@ -56,7 +54,7 @@ export function ResourceManager() {
 
   useEffect(() => {
     loadData()
-  }, [currentPage, pageSize, searchName, searchType, searchStatus])
+  }, [currentPage, pageSize, searchTitle, searchType])
 
   const handleSearch = () => {
     setCurrentPage(1)
@@ -64,9 +62,8 @@ export function ResourceManager() {
   }
 
   const handleReset = () => {
-    setSearchName("")
+    setSearchTitle("")
     setSearchType("")
-    setSearchStatus("")
     setCurrentPage(1)
     loadData()
   }
@@ -96,10 +93,10 @@ export function ResourceManager() {
     e.preventDefault()
     const formData = new FormData(e.target as HTMLFormElement)
     const data = {
-      name: formData.get("name") as string,
-      type: formData.get("type") as string,
       url: formData.get("url") as string,
-      status: formData.get("status") as string,
+      title: formData.get("title") as string,
+      content: formData.get("content") as string,
+      type: formData.get("type") as string,
     }
 
     try {
@@ -120,21 +117,15 @@ export function ResourceManager() {
       <div className="flex justify-between items-center mb-6">
         <div className="flex gap-4">
           <Input
-            placeholder="资源名称"
-            value={searchName}
-            onChange={(e) => setSearchName(e.target.value)}
+            placeholder="标题"
+            value={searchTitle}
+            onChange={(e) => setSearchTitle(e.target.value)}
             className="w-[200px]"
           />
           <Input
-            placeholder="资源类型"
+            placeholder="类型"
             value={searchType}
             onChange={(e) => setSearchType(e.target.value)}
-            className="w-[200px]"
-          />
-          <Input
-            placeholder="状态"
-            value={searchStatus}
-            onChange={(e) => setSearchStatus(e.target.value)}
             className="w-[200px]"
           />
           <Button onClick={handleSearch}>搜索</Button>
@@ -149,10 +140,10 @@ export function ResourceManager() {
         <TableHeader>
           <TableRow>
             <TableHead>ID</TableHead>
-            <TableHead>名称</TableHead>
-            <TableHead>类型</TableHead>
             <TableHead>URL</TableHead>
-            <TableHead>状态</TableHead>
+            <TableHead>标题</TableHead>
+            <TableHead>内容</TableHead>
+            <TableHead>类型</TableHead>
             <TableHead>创建时间</TableHead>
             <TableHead>操作</TableHead>
           </TableRow>
@@ -162,11 +153,11 @@ export function ResourceManager() {
             resources.map((resource) => (
               <TableRow key={resource.id}>
                 <TableCell>{resource.id}</TableCell>
-                <TableCell>{resource.name}</TableCell>
-                <TableCell>{resource.type}</TableCell>
                 <TableCell>{resource.url}</TableCell>
-                <TableCell>{resource.status}</TableCell>
-                <TableCell>{resource.createdAt}</TableCell>
+                <TableCell>{resource.title}</TableCell>
+                <TableCell>{resource.content}</TableCell>
+                <TableCell>{resource.type}</TableCell>
+                <TableCell>{resource.created_at}</TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"
@@ -243,24 +234,6 @@ export function ResourceManager() {
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <label htmlFor="name">名称</label>
-                <Input
-                  id="name"
-                  name="name"
-                  defaultValue={editingResource?.name}
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <label htmlFor="type">类型</label>
-                <Input
-                  id="type"
-                  name="type"
-                  defaultValue={editingResource?.type}
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
                 <label htmlFor="url">URL</label>
                 <Input
                   id="url"
@@ -270,11 +243,29 @@ export function ResourceManager() {
                 />
               </div>
               <div className="grid gap-2">
-                <label htmlFor="status">状态</label>
+                <label htmlFor="title">标题</label>
                 <Input
-                  id="status"
-                  name="status"
-                  defaultValue={editingResource?.status}
+                  id="title"
+                  name="title"
+                  defaultValue={editingResource?.title}
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <label htmlFor="content">内容</label>
+                <Input
+                  id="content"
+                  name="content"
+                  defaultValue={editingResource?.content}
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <label htmlFor="type">类型</label>
+                <Input
+                  id="type"
+                  name="type"
+                  defaultValue={editingResource?.type}
                   required
                 />
               </div>

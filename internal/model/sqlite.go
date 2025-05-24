@@ -11,9 +11,7 @@ import (
 	"github.com/uptrace/bun/driver/sqliteshim"
 )
 
-var sqliteDB *bun.DB
-
-func InitDB() {
+func InitDB() *bun.DB {
 	// 确保data目录存在
 	dataDir := "./data"
 	if err := os.MkdirAll(dataDir, 0755); err != nil {
@@ -35,16 +33,15 @@ func InitDB() {
 
 	// 创建 bun DB 实例
 	db := bun.NewDB(sqldb, sqlitedialect.New())
-	sqliteDB = db
 	// 创建
-	err = sqliteDB.ResetModel(context.Background(),
+	db.NewCreateTable().Model((*Resource)(nil)).IfNotExists().Exec(context.Background(),
 		(*Resource)(nil),
 		(*Models)(nil),
 	)
-	if err != nil {
-		panic(err)
-	}
 
 	// 初始化表数据
-	(&Models{}).InitData()
+	NewModelsModel(db).InitData()
+	return db
 }
+
+// 自定义数据库日志输出

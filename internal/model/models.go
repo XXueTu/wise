@@ -26,51 +26,6 @@ type Models struct {
 	UpdatedAt     time.Time `bun:"updated_at,notnull,default:current_timestamp" json:"updated_at"`
 }
 
-// ModelsList 模型列表返回结构
-type ModelsList struct {
-	Total int64     `json:"total"` // 总记录数
-	List  []*Models `json:"list"`  // 模型列表
-}
-
-// TableName 返回表名
-func (m *Models) TableName() string {
-	return "models"
-}
-
-func (m *Models) InitData() {
-	apiKey := os.Getenv("DEFAULT_API_KEY")
-	models := []*Models{
-		{
-			BaseUrl:       "https://ark.cn-beijing.volces.com/api/v3",
-			Config:        fmt.Sprintf("{\"apiKey\":\"%s\"}", apiKey),
-			Type:          "doubao",
-			ModelName:     "豆包1.5",
-			ModelRealName: "doubao-1-5-pro-32k-250115",
-			Status:        "active",
-			Tag:           "function",
-		},
-	}
-	for _, model := range models {
-		// 判断是否存在
-		exist, err := sqliteDB.NewSelect().Model((*Models)(nil)).
-			Where("base_url = ?", model.BaseUrl).
-			Where("model_name = ?", model.ModelName).
-			Where("model_real_name = ?", model.ModelRealName).
-			Exists(context.Background())
-		if err != nil {
-			logx.Error("InitData error", err)
-			continue
-		}
-		if exist {
-			continue
-		}
-		err = model.Create(context.Background(), model)
-		if err != nil {
-			logx.Error("InitData error", err)
-		}
-	}
-}
-
 // BeforeCreate 创建前的钩子
 func (m *Models) BeforeCreate(ctx context.Context) (context.Context, error) {
 	now := time.Now()
@@ -85,44 +40,113 @@ func (m *Models) BeforeUpdate(ctx context.Context) (context.Context, error) {
 	return ctx, nil
 }
 
+type ModelsModel struct {
+	db *bun.DB
+}
+
+func NewModelsModel(db *bun.DB) *ModelsModel {
+	return &ModelsModel{
+		db: db,
+	}
+}
+
+// ModelsList 模型列表返回结构
+type ModelsList struct {
+	Total int64     `json:"total"` // 总记录数
+	List  []*Models `json:"list"`  // 模型列表
+}
+
+// TableName 返回表名
+func (m *ModelsModel) TableName() string {
+	return "models"
+}
+
+func (m *ModelsModel) InitData() {
+	apiKey := os.Getenv("DEFAULT_API_KEY")
+	models := []*Models{
+		{
+			BaseUrl:       "https://ark.cn-beijing.volces.com/api/v3",
+			Config:        fmt.Sprintf("{\"apiKey\":\"%s\"}", apiKey),
+			Type:          "doubao",
+			ModelName:     "豆包1.5",
+			ModelRealName: "doubao-1-5-pro-32k-250115",
+			Status:        "active",
+			Tag:           "function",
+		},
+	}
+	for _, model := range models {
+		// 判断是否存在
+		exist, err := m.db.NewSelect().Model((*Models)(nil)).
+			Where("base_url = ?", model.BaseUrl).
+			Where("model_name = ?", model.ModelName).
+			Where("model_real_name = ?", model.ModelRealName).
+			Exists(context.Background())
+		if err != nil {
+			logx.Error("InitData error", err)
+			continue
+		}
+		if exist {
+			continue
+		}
+		err = m.Create(context.Background(), model)
+		if err != nil {
+			logx.Error("InitData error", err)
+		}
+	}
+}
+
 // Create 创建模型
-func (m *Models) Create(ctx context.Context, model *Models) error {
-	_, err := sqliteDB.NewInsert().Model(model).Exec(ctx)
+func (m *ModelsModel) Create(ctx context.Context, model *Models) error {
+	_, err := m.db.NewInsert().Model(model).Exec(ctx)
+	if err != nil {
+		logx.Error("Create error", err)
+	}
 	return err
 }
 
 // Update 更新模型
-func (m *Models) Update(ctx context.Context, model *Models) error {
-	_, err := sqliteDB.NewUpdate().
+func (m *ModelsModel) Update(ctx context.Context, model *Models) error {
+	_, err := m.db.NewUpdate().
 		Model(model).
 		WherePK().
 		Exec(ctx)
+	if err != nil {
+		logx.Error("Update error", err)
+	}
 	return err
 }
 
 // Delete 删除模型
-func (m *Models) Delete(ctx context.Context, id int64) error {
-	_, err := sqliteDB.NewDelete().
+func (m *ModelsModel) Delete(ctx context.Context, id int64) error {
+	_, err := m.db.NewDelete().
 		Model((*Models)(nil)).
 		Where("id = ?", id).
 		Exec(ctx)
+	if err != nil {
+		logx.Error("Delete error", err)
+	}
 	return err
 }
 
-func (m *Models) Get(ctx context.Context, id int64) (*Models, error) {
+func (m *ModelsModel) Get(ctx context.Context, id int64) (*Models, error) {
 	var model Models
-	err := sqliteDB.NewSelect().Model(&model).Where("id = ?", id).Scan(ctx)
+	err := m.db.NewSelect().Model(&model).Where("id = ?", id).Scan(ctx)
 	return &model, err
 }
 
 // GetList 分页查询模型列表
-func (m *Models) GetList(ctx context.Context, page, size int, tag string, status string, modelName string) (*ModelsList, error) {
+func (m *ModelsModel) GetList(ctx context.Context, page, size int64, modelType string, tag []string, status, modelName string) (*ModelsList, error) {
 	// 构建查询
-	query := sqliteDB.NewSelect().Model((*Models)(nil))
+	query := m.db.NewSelect().Model((*Models)(nil))
 
 	// 添加条件
-	if tag != "" {
-		query = query.Where("tag = ?", tag)
+	if modelType != "" {
+		query = query.Where("type = ?", modelType)
+	}
+	if len(tag) > 0 {
+		for _, t := range tag {
+			query = query.Where("tag LIKE ?", "%"+t+"%")
+		}
 	}
 	if status != "" {
 		query = query.Where("status = ?", status)
@@ -134,6 +158,7 @@ func (m *Models) GetList(ctx context.Context, page, size int, tag string, status
 	// 获取总记录数
 	total, err := query.Count(ctx)
 	if err != nil {
+		logx.Error("GetList total error", err)
 		return nil, err
 	}
 
@@ -141,10 +166,11 @@ func (m *Models) GetList(ctx context.Context, page, size int, tag string, status
 	var models []*Models
 	err = query.
 		Order("created_at DESC").
-		Offset((page-1)*size).
-		Limit(size).
+		Offset(int((page-1)*size)).
+		Limit(int(size)).
 		Scan(ctx, &models)
 	if err != nil {
+		logx.Error("GetList scan error", err)
 		return nil, err
 	}
 
@@ -152,9 +178,4 @@ func (m *Models) GetList(ctx context.Context, page, size int, tag string, status
 		Total: int64(total),
 		List:  models,
 	}, nil
-}
-
-// NewModels 创建新的模型实例
-func NewModels() *Models {
-	return &Models{}
 }

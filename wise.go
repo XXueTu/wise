@@ -10,7 +10,6 @@ import (
 
 	"github.com/XXueTu/wise/internal/config"
 	"github.com/XXueTu/wise/internal/handler"
-	"github.com/XXueTu/wise/internal/model"
 	"github.com/XXueTu/wise/internal/svc"
 )
 
@@ -22,7 +21,13 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 
-	server := rest.MustNewServer(c.RestConf, rest.WithFileServer("/", http.Dir("dist")))
+	server := rest.MustNewServer(c.RestConf,
+		rest.WithFileServer("/", http.Dir("dist")),
+		rest.WithCustomCors(func(header http.Header) {
+			header.Add("Access-Control-Allow-Headers", "Content-Type,AccessToken,X-CSRF-Token,Authorization,Token,X-Token,X-User-Id,OS,Platform, Version")
+			header.Set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,PATCH")
+			header.Set("Access-Control-Expose-Headers", "Content-Length, Content-Type")
+		}, nil, "*"))
 	defer server.Stop()
 
 	// 添加中间件处理根路径重定向
@@ -40,7 +45,5 @@ func main() {
 	handler.RegisterHandlers(server, ctx)
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
-	// 初始化数据库
-	model.InitDB()
 	server.Start()
 }

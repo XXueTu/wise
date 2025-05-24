@@ -17,3 +17,10 @@ Content-Type: application/json
 {
   "url": "https://mp.weixin.qq.com/s/PRTGGhH3iPBVU6Fv9MtdKg"
 }
+
+
+### 获取资源列表
+GET http://127.0.0.1:8888/wise/api/resources/list?page=1&page_size=10
+User-Agent: Apifox/1.0.0 (https://apifox.com)
+Content-Type: application/json
+
