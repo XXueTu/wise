@@ -4,12 +4,13 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/XXueTu/wise/internal/config"
-	"github.com/XXueTu/wise/internal/handler"
-	"github.com/XXueTu/wise/internal/svc"
-
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
+
+	"github.com/XXueTu/wise/internal/config"
+	"github.com/XXueTu/wise/internal/handler"
+	"github.com/XXueTu/wise/internal/model"
+	"github.com/XXueTu/wise/internal/svc"
 )
 
 var configFile = flag.String("f", "etc/wise-api.yaml", "the config file")
@@ -27,5 +28,6 @@ func main() {
 	handler.RegisterHandlers(server, ctx)
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
+	model.InitDB()
 	server.Start()
 }

@@ -5,6 +5,7 @@ import (
 
 	"github.com/zeromicro/go-zero/core/logx"
 
+	"github.com/XXueTu/wise/internal/model"
 	"github.com/XXueTu/wise/internal/svc"
 	"github.com/XXueTu/wise/internal/types"
 	"github.com/XXueTu/wise/pkg/spiders"
@@ -34,6 +35,11 @@ func (l *UrlLogic) Url(req *types.URLRequest) (resp *types.URLResponse, err erro
 		return resp, err
 	}
 
+	resource := model.ResourceModel(0, req.URL, title, content, "微信公众号")
+	err = resource.Create(l.ctx, resource)
+	if err != nil {
+		return resp, err
+	}
 	resp.Title = title
 	resp.Description = content
 	resp.Link = req.URL
