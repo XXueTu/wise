@@ -87,6 +87,7 @@ func InitDB() *bun.DB {
 
 	// 初始化表数据
 	NewModelsModel(db).InitData()
+	NewTagsModel(db).InitData()
 	return db
 }
 

@@ -6,15 +6,18 @@ export interface Resource {
   title: string
   content: string
   type: string
+  tags: string[]      // 标签名称列表
+  tag_uids: string[]  // 标签ID列表
   created_at: string
   updated_at: string
 }
 
 export interface ResourceQuery {
-  page: number
-  page_size: number
+  page?: number
+  page_size?: number
   type?: string
   keyword?: string
+  tag_uids?: string[]  // 标签ID列表
 }
 
 export interface ResourceResponse {
@@ -22,30 +25,41 @@ export interface ResourceResponse {
   resources: Resource[]
 }
 
+export interface CreateResourceRequest {
+  url: string
+  title: string
+  content: string
+  type: string
+  tag_uids: string[]  // 标签ID列表
+}
+
+export interface UpdateResourceRequest {
+  id: number
+  url: string
+  title: string
+  content: string
+  type: string
+  tag_uids: string[]  // 标签ID列表
+}
+
 export const resourceService = {
   // 获取资源列表
   getResources: async (query: ResourceQuery): Promise<ResourceResponse> => {
-    const params = new URLSearchParams()
-    Object.entries(query).forEach(([key, value]) => {
-      if (value !== undefined && value !== '') {
-        params.append(key, String(value))
-      }
-    })
-    return api.get(`/resources/list?${params.toString()}`)
+    return api.post('/resources/list', query)
   },
 
   // 创建资源
-  createResource: async (data: Omit<Resource, 'id' | 'created_at' | 'updated_at'>): Promise<Resource> => {
+  createResource: async (data: CreateResourceRequest): Promise<Resource> => {
     return api.post('/resources', data)
   },
 
   // 更新资源
-  updateResource: async (id: number, data: Partial<Resource>): Promise<Resource> => {
+  updateResource: async (id: number, data: Omit<UpdateResourceRequest, 'id'>): Promise<Resource> => {
     return api.put('/resources', { id, ...data })
   },
 
   // 删除资源
-  deleteResource: async (id: number): Promise<Resource> => {
+  deleteResource: async (id: number): Promise<void> => {
     return api.delete('/resources', { data: { id } })
   },
 

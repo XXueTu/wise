@@ -29,7 +29,7 @@ func NewListResourceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *List
 
 func (l *ListResourceLogic) ListResource(req *types.ListResourceRequest) (resp *types.ListResourceResponse, err error) {
 	logx.Infof("ListResourceLogic: %+v", req)
-	resources, err := l.svcCtx.ResourceModel.GetList(l.ctx, int(req.Page), int(req.PageSize), req.Type, req.Keyword)
+	resources, err := l.svcCtx.ResourceModel.GetList(l.ctx, int(req.Page), int(req.PageSize), req.Type, req.Keyword, req.TagUids)
 	if err != nil {
 		return nil, errors.New("获取资源列表失败")
 	}
@@ -54,6 +54,7 @@ func (l *ListResourceLogic) ListResource(req *types.ListResourceRequest) (resp *
 			Content:   resource.Content,
 			Type:      resource.Type,
 			Tags:      tags,
+			TagUids:   strings.Split(resource.Tags, ","),
 			CreatedAt: resource.CreatedAt.Format(time.DateTime),
 			UpdatedAt: resource.UpdatedAt.Format(time.DateTime),
 		}

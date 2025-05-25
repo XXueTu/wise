@@ -105,7 +105,7 @@ func (r *ResourceModel) Delete(ctx context.Context, id int64) error {
 }
 
 // GetList 分页查询资源列表
-func (r *ResourceModel) GetList(ctx context.Context, page, size int, resourceType, title string) (*ResourceList, error) {
+func (r *ResourceModel) GetList(ctx context.Context, page, size int, resourceType, title string, tagUids []string) (*ResourceList, error) {
 	// 构建查询
 	query := r.db.NewSelect().Model((*Resource)(nil))
 
@@ -116,10 +116,16 @@ func (r *ResourceModel) GetList(ctx context.Context, page, size int, resourceTyp
 	if resourceType != "" {
 		query = query.Where("type = ?", resourceType)
 	}
+	if len(tagUids) > 0 {
+		for _, tagUid := range tagUids {
+			query = query.Where("tags like ?", "%"+tagUid+"%")
+		}
+	}
 
 	// 获取总记录数
 	total, err := query.Count(ctx)
 	if err != nil {
+
 		logx.Error("GetList total error", err)
 		return nil, err
 	}

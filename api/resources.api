@@ -7,6 +7,7 @@ type Resource {
 	Content   string   `json:"content"`    // 内容
 	Type      string   `json:"type"`       // 类型
 	Tags      []string `json:"tags"`       // 标签
+	TagUids   []string `json:"tag_uids"`   // 标签ID
 	CreatedAt string   `json:"created_at"` // 创建时间
 	UpdatedAt string   `json:"updated_at"` // 更新时间
 }
@@ -41,11 +42,11 @@ type GetResourceRequest {
 }
 
 type ListResourceRequest {
-	Page     int64    `form:"page"`             // 页码
-	PageSize int64    `form:"page_size"`        // 每页数量
-	Type     string   `form:"type,optional"`    // 类型（可选）
-	TagUids  []string `form:"tag_uids,optional"`    // 标签（可选）
-	Keyword  string   `form:"keyword,optional"` // 关键词（可选）
+	Page     int64    `json:"page"`              // 页码
+	PageSize int64    `json:"page_size"`         // 每页数量
+	Type     string   `json:"type,optional"`     // 类型（可选）
+	TagUids  []string `json:"tag_uids,optional"` // 标签（可选）
+	Keyword  string   `json:"keyword,optional"`  // 关键词（可选）
 }
 
 type ListResourceResponse {
@@ -80,5 +81,5 @@ service wise-api {
 
 	@doc "分页查询资源列表"
 	@handler ListResourceHandler
-	get /api/resources/list (ListResourceRequest) returns (ListResourceResponse)
+	post /api/resources/list (ListResourceRequest) returns (ListResourceResponse)
 }

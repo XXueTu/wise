@@ -104,7 +104,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				// 分页查询资源列表
-				Method:  http.MethodGet,
+				Method:  http.MethodPost,
 				Path:    "/api/resources/list",
 				Handler: resources.ListResourceHandler(serverCtx),
 			},

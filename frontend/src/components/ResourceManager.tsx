@@ -1,28 +1,29 @@
+import { TagSelector } from "@/components/TagSelector"
 import { Button } from "@/components/ui/button"
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import {
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
 } from "@/components/ui/pagination"
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table"
 import { Resource, resourceService } from "@/services/resourceService"
 import { useEffect, useState } from "react"
@@ -34,16 +35,19 @@ export function ResourceManager() {
   const [total, setTotal] = useState(0)
   const [searchTitle, setSearchTitle] = useState("")
   const [searchType, setSearchType] = useState("")
+  const [searchTagUids, setSearchTagUids] = useState<string[]>([])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingResource, setEditingResource] = useState<Resource | null>(null)
+  const [selectedTagUids, setSelectedTagUids] = useState<string[]>([])
 
   const loadData = async () => {
     try {
       const data = await resourceService.getResources({
         page: currentPage,
         page_size: pageSize,
-        type: searchType,
-        keyword: searchTitle
+        type: searchType || undefined,
+        keyword: searchTitle || undefined,
+        tag_uids: searchTagUids.length > 0 ? searchTagUids : undefined
       })
       setResources(data.resources)
       setTotal(data.total)
@@ -54,7 +58,7 @@ export function ResourceManager() {
 
   useEffect(() => {
     loadData()
-  }, [currentPage, pageSize, searchTitle, searchType])
+  }, [currentPage, pageSize, searchTitle, searchType, searchTagUids])
 
   const handleSearch = () => {
     setCurrentPage(1)
@@ -64,17 +68,20 @@ export function ResourceManager() {
   const handleReset = () => {
     setSearchTitle("")
     setSearchType("")
+    setSearchTagUids([])
     setCurrentPage(1)
     loadData()
   }
 
   const handleAdd = () => {
     setEditingResource(null)
+    setSelectedTagUids([])
     setIsDialogOpen(true)
   }
 
   const handleEdit = (resource: Resource) => {
     setEditingResource(resource)
+    setSelectedTagUids(resource.tag_uids || [])
     setIsDialogOpen(true)
   }
 
@@ -97,6 +104,7 @@ export function ResourceManager() {
       title: formData.get("title") as string,
       content: formData.get("content") as string,
       type: formData.get("type") as string,
+      tag_uids: selectedTagUids,
     }
 
     try {
@@ -128,6 +136,14 @@ export function ResourceManager() {
             onChange={(e) => setSearchType(e.target.value)}
             className="w-[200px]"
           />
+          <div className="w-[300px]">
+            <TagSelector
+              value={searchTagUids}
+              onChange={setSearchTagUids}
+              placeholder="选择标签..."
+              maxDisplayedTags={4}
+            />
+          </div>
           <Button onClick={handleSearch}>搜索</Button>
           <Button variant="outline" onClick={handleReset}>
             重置
@@ -144,6 +160,7 @@ export function ResourceManager() {
             <TableHead>标题</TableHead>
             <TableHead>内容</TableHead>
             <TableHead>类型</TableHead>
+            <TableHead>标签</TableHead>
             <TableHead>创建时间</TableHead>
             <TableHead>操作</TableHead>
           </TableRow>
@@ -157,6 +174,15 @@ export function ResourceManager() {
                 <TableCell>{resource.title}</TableCell>
                 <TableCell>{resource.content}</TableCell>
                 <TableCell>{resource.type}</TableCell>
+                <TableCell>
+                  <div className="flex flex-wrap gap-1">
+                    {resource.tags?.map((tag, index) => (
+                      <span key={index} className="px-2 py-1 bg-gray-100 rounded text-sm">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </TableCell>
                 <TableCell>{resource.created_at}</TableCell>
                 <TableCell>
                   <Button
@@ -178,7 +204,7 @@ export function ResourceManager() {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={7} className="text-center">
+              <TableCell colSpan={8} className="text-center">
                 暂无数据
               </TableCell>
             </TableRow>
@@ -267,6 +293,14 @@ export function ResourceManager() {
                   name="type"
                   defaultValue={editingResource?.type}
                   required
+                />
+              </div>
+              <div className="grid gap-2">
+                <label htmlFor="tag_uids">标签</label>
+                <TagSelector
+                  value={selectedTagUids}
+                  onChange={setSelectedTagUids}
+                  placeholder="选择标签..."
                 />
               </div>
             </div>
