@@ -3,6 +3,7 @@ package resources
 import (
 	"context"
 	"errors"
+	"strings"
 
 	"github.com/zeromicro/go-zero/core/logx"
 
@@ -30,12 +31,22 @@ func (l *GetResourceLogic) GetResource(req *types.GetResourceRequest) (resp *typ
 	if err != nil {
 		return nil, errors.New("获取资源失败")
 	}
+	// 获取标签
+	tagList, err := l.svcCtx.TagsModel.GetUids(l.ctx, strings.Split(resource.Tags, ","))
+	if err != nil {
+		return nil, errors.New("获取标签失败")
+	}
+	var tags []string
+	for _, tag := range tagList {
+		tags = append(tags, tag.Name)
+	}
 	resp = &types.Resource{
 		Id:      resource.ID,
 		URL:     resource.URL,
 		Title:   resource.Title,
 		Content: resource.Content,
 		Type:    resource.Type,
+		Tags:    tags,
 	}
 	return resp, nil
 }

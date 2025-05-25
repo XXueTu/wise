@@ -77,7 +77,12 @@ func InitDB() *bun.DB {
 	// 创建表
 	db.NewCreateTable().Model((*Resource)(nil)).IfNotExists().Exec(context.Background(),
 		(*Resource)(nil),
+	)
+	db.NewCreateTable().Model((*Models)(nil)).IfNotExists().Exec(context.Background(),
 		(*Models)(nil),
+	)
+	db.NewCreateTable().Model((*Tags)(nil)).IfNotExists().Exec(context.Background(),
+		(*Tags)(nil),
 	)
 
 	// 初始化表数据

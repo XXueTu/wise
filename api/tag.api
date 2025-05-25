@@ -1,0 +1,100 @@
+syntax = "v1"
+
+type CreateTagRequest {
+	Name        string `json:"name"`         // 标签名称
+	Description string `json:"description"`  // 标签描述
+	Color       string `json:"color"`        // 标签颜色
+	Icon        string `json:"icon"`         // 标签图标
+}
+
+type CreateTagResponse {
+	Id          int64  `json:"id"`          // 主键ID
+	Uid         string `json:"uid"`         // 标签唯一标识
+	Name        string `json:"name"`        // 标签名称
+	Description string `json:"description"` // 标签描述
+	Color       string `json:"color"`       // 标签颜色
+	Icon        string `json:"icon"`        // 标签图标
+	CreatedAt   string `json:"created_at"`  // 创建时间
+	UpdatedAt   string `json:"updated_at"`  // 更新时间
+}
+
+type UpdateTagRequest {
+	Uid         string `json:"uid,optional"` // 标签唯一标识
+	Name        string `json:"name"`         // 标签名称
+	Description string `json:"description"`  // 标签描述
+	Color       string `json:"color"`        // 标签颜色
+	Icon        string `json:"icon"`         // 标签图标
+}
+
+type UpdateTagResponse {
+	Id          int64  `json:"id"`          // 主键ID
+	Uid         string `json:"uid"`         // 标签唯一标识
+	Name        string `json:"name"`        // 标签名称
+	Description string `json:"description"` // 标签描述
+	Color       string `json:"color"`       // 标签颜色
+	Icon        string `json:"icon"`        // 标签图标
+	CreatedAt   string `json:"created_at"`  // 创建时间
+	UpdatedAt   string `json:"updated_at"`  // 更新时间
+}
+
+type GetTagRequest {
+	Uid string `json:"uid"` // 标签唯一标识
+}
+
+type DeleteTagRequest {
+	Uid string `json:"uid"` // 标签唯一标识
+}
+
+type DeleteTagResponse {
+	Result string `json:"result"` // 结果
+}
+
+type ListTagRequest {
+	Page     int64  `json:"page,default=1"`       // 页码
+	PageSize int64  `json:"page_size,default=10"` // 每页数量
+	Name     string `json:"name,optional"`        // 标签名称（模糊查询）
+}
+
+type ListTagResponse {
+	Total int64         `json:"total"` // 总数
+	List  []TagResponse `json:"list"`  // 标签列表
+}
+
+type TagResponse {
+	Uid         string `json:"uid"`         // 标签唯一标识
+	Name        string `json:"name"`        // 标签名称
+	Description string `json:"description"` // 标签描述
+	Color       string `json:"color"`       // 标签颜色
+	Icon        string `json:"icon"`        // 标签图标
+	CreatedAt   string `json:"created_at"`  // 创建时间
+	UpdatedAt   string `json:"updated_at"`  // 更新时间
+}
+
+@server (
+	// 代表当前 service 代码块下的路由生成代码时都会被放到 login 目录下
+	group: tags
+	// 定义路由前缀为 "/wise"
+	prefix: /wise
+)
+service wise-api {
+
+	@doc "创建标签"
+	@handler CreateTagHandler
+	post /api/tag (CreateTagRequest) returns (CreateTagResponse)
+
+	@doc "更新标签"
+	@handler UpdateTagHandler
+	put /api/tag (UpdateTagRequest) returns (UpdateTagResponse)
+
+	@doc "删除标签"
+	@handler DeleteTagHandler
+	delete /api/tag (DeleteTagRequest) returns (DeleteTagResponse)
+
+	@doc "获取标签详情"
+	@handler GetTagHandler
+	get /api/tag (GetTagRequest) returns (TagResponse)
+
+	@doc "获取标签列表"
+	@handler ListTagHandler
+	get /api/tags (ListTagRequest) returns (ListTagResponse)
+}

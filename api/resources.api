@@ -1,28 +1,35 @@
 syntax = "v1"
 
 type Resource {
-	Id        int64  `json:"id"`         // 主键
-	URL       string `json:"url"`        // URL链接
-	Title     string `json:"title"`      // 标题
-	Content   string `json:"content"`    // 内容
-	Type      string `json:"type"`       // 类型
-	CreatedAt string `json:"created_at"` // 创建时间
-	UpdatedAt string `json:"updated_at"` // 更新时间
+	Id        int64    `json:"id"`         // 主键
+	URL       string   `json:"url"`        // URL链接
+	Title     string   `json:"title"`      // 标题
+	Content   string   `json:"content"`    // 内容
+	Type      string   `json:"type"`       // 类型
+	Tags      []string `json:"tags"`       // 标签
+	CreatedAt string   `json:"created_at"` // 创建时间
+	UpdatedAt string   `json:"updated_at"` // 更新时间
 }
 
 type CreateResourceRequest {
-	URL     string `json:"url"`     // URL链接
-	Title   string `json:"title"`   // 标题
-	Content string `json:"content"` // 内容
-	Type    string `json:"type"`    // 类型
+	URL     string   `json:"url"`      // URL链接
+	Title   string   `json:"title"`    // 标题
+	Content string   `json:"content"`  // 内容
+	Type    string   `json:"type"`     // 类型
+	TagUids []string `json:"tag_uids"` // 标签ID
+}
+
+type CreateAiResourceRequest {
+	URL string `json:"url"` // URL链接
 }
 
 type UpdateResourceRequest {
-	Id      int64  `json:"id"`      // 主键
-	URL     string `json:"url"`     // URL链接
-	Title   string `json:"title"`   // 标题
-	Content string `json:"content"` // 内容
-	Type    string `json:"type"`    // 类型
+	Id      int64    `json:"id"`       // 主键
+	URL     string   `json:"url"`      // URL链接
+	Title   string   `json:"title"`    // 标题
+	Content string   `json:"content"`  // 内容
+	Type    string   `json:"type"`     // 类型
+	TagUids []string `json:"tag_uids"` // 标签
 }
 
 type DeleteResourceRequest {
@@ -34,10 +41,11 @@ type GetResourceRequest {
 }
 
 type ListResourceRequest {
-	Page     int64  `form:"page"`             // 页码
-	PageSize int64  `form:"page_size"`        // 每页数量
-	Type     string `form:"type,optional"`    // 类型（可选）
-	Keyword  string `form:"keyword,optional"` // 关键词（可选）
+	Page     int64    `form:"page"`             // 页码
+	PageSize int64    `form:"page_size"`        // 每页数量
+	Type     string   `form:"type,optional"`    // 类型（可选）
+	TagUids  []string `form:"tag_uids,optional"`    // 标签（可选）
+	Keyword  string   `form:"keyword,optional"` // 关键词（可选）
 }
 
 type ListResourceResponse {
@@ -53,6 +61,10 @@ service wise-api {
 	@doc "创建资源"
 	@handler CreateResourceHandler
 	post /api/resources (CreateResourceRequest) returns (Resource)
+
+	@doc "创建AI资源"
+	@handler CreateAiResourceHandler
+	post /api/ai/resources (CreateAiResourceRequest) returns (Resource)
 
 	@doc "更新资源"
 	@handler UpdateResourceHandler

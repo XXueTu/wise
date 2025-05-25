@@ -9,6 +9,7 @@ import (
 	api "github.com/XXueTu/wise/internal/handler/api"
 	models "github.com/XXueTu/wise/internal/handler/models"
 	resources "github.com/XXueTu/wise/internal/handler/resources"
+	tags "github.com/XXueTu/wise/internal/handler/tags"
 	"github.com/XXueTu/wise/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -72,6 +73,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				// 创建AI资源
+				Method:  http.MethodPost,
+				Path:    "/api/ai/resources",
+				Handler: resources.CreateAiResourceHandler(serverCtx),
+			},
+			{
 				// 创建资源
 				Method:  http.MethodPost,
 				Path:    "/api/resources",
@@ -100,6 +107,42 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodGet,
 				Path:    "/api/resources/list",
 				Handler: resources.ListResourceHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/wise"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 创建标签
+				Method:  http.MethodPost,
+				Path:    "/api/tag",
+				Handler: tags.CreateTagHandler(serverCtx),
+			},
+			{
+				// 更新标签
+				Method:  http.MethodPut,
+				Path:    "/api/tag",
+				Handler: tags.UpdateTagHandler(serverCtx),
+			},
+			{
+				// 删除标签
+				Method:  http.MethodDelete,
+				Path:    "/api/tag",
+				Handler: tags.DeleteTagHandler(serverCtx),
+			},
+			{
+				// 获取标签详情
+				Method:  http.MethodGet,
+				Path:    "/api/tag",
+				Handler: tags.GetTagHandler(serverCtx),
+			},
+			{
+				// 获取标签列表
+				Method:  http.MethodGet,
+				Path:    "/api/tags",
+				Handler: tags.ListTagHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/wise"),

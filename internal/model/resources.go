@@ -17,6 +17,7 @@ type Resource struct {
 	Title     string    `bun:"title,notnull" json:"title"`     // 资源标题
 	Content   string    `bun:"content,notnull" json:"content"` // 资源内容
 	Type      string    `bun:"type,notnull" json:"type"`       // 资源类型（如：wechat, zhihu等）
+	Tags      string    `bun:"tags,notnull" json:"tags"`       // 资源标签
 	CreatedAt time.Time `bun:"created_at,notnull,default:current_timestamp" json:"created_at"`
 	UpdatedAt time.Time `bun:"updated_at,notnull,default:current_timestamp" json:"updated_at"`
 }

@@ -12,6 +12,10 @@ type BaseResponse struct {
 	Result string `json:"result"` // 结果
 }
 
+type CreateAiResourceRequest struct {
+	URL string `json:"url"` // URL链接
+}
+
 type CreateModelRequest struct {
 	BaseUrl       string   `json:"base_url"`        // 基础URL
 	Config        string   `json:"config"`          // 配置信息
@@ -23,10 +27,29 @@ type CreateModelRequest struct {
 }
 
 type CreateResourceRequest struct {
-	URL     string `json:"url"`     // URL链接
-	Title   string `json:"title"`   // 标题
-	Content string `json:"content"` // 内容
-	Type    string `json:"type"`    // 类型
+	URL     string   `json:"url"`      // URL链接
+	Title   string   `json:"title"`    // 标题
+	Content string   `json:"content"`  // 内容
+	Type    string   `json:"type"`     // 类型
+	TagUids []string `json:"tag_uids"` // 标签
+}
+
+type CreateTagRequest struct {
+	Name        string `json:"name"`        // 标签名称
+	Description string `json:"description"` // 标签描述
+	Color       string `json:"color"`       // 标签颜色
+	Icon        string `json:"icon"`        // 标签图标
+}
+
+type CreateTagResponse struct {
+	Id          int64  `json:"id"`          // 主键ID
+	Uid         string `json:"uid"`         // 标签唯一标识
+	Name        string `json:"name"`        // 标签名称
+	Description string `json:"description"` // 标签描述
+	Color       string `json:"color"`       // 标签颜色
+	Icon        string `json:"icon"`        // 标签图标
+	CreatedAt   string `json:"created_at"`  // 创建时间
+	UpdatedAt   string `json:"updated_at"`  // 更新时间
 }
 
 type DeleteModelRequest struct {
@@ -37,12 +60,24 @@ type DeleteResourceRequest struct {
 	Id int64 `form:"id"` // 主键
 }
 
+type DeleteTagRequest struct {
+	Uid string `json:"uid"` // 标签唯一标识
+}
+
+type DeleteTagResponse struct {
+	Result string `json:"result"` // 结果
+}
+
 type GetModelRequest struct {
 	Id int64 `form:"id"` // 主键
 }
 
 type GetResourceRequest struct {
 	Id int64 `form:"id"` // 主键
+}
+
+type GetTagRequest struct {
+	Uid string `json:"uid"` // 标签唯一标识
 }
 
 type ListModelRequest struct {
@@ -60,15 +95,27 @@ type ListModelResponse struct {
 }
 
 type ListResourceRequest struct {
-	Page     int64  `form:"page"`             // 页码
-	PageSize int64  `form:"page_size"`        // 每页数量
-	Type     string `form:"type,optional"`    // 类型（可选）
-	Keyword  string `form:"keyword,optional"` // 关键词（可选）
+	Page     int64    `form:"page"`              // 页码
+	PageSize int64    `form:"page_size"`         // 每页数量
+	Type     string   `form:"type,optional"`     // 类型（可选）
+	TagUids  []string `form:"tag_uids,optional"` // 标签（可选）
+	Keyword  string   `form:"keyword,optional"`  // 关键词（可选）
 }
 
 type ListResourceResponse struct {
 	Total     int64      `json:"total"`     // 总数
 	Resources []Resource `json:"resources"` // 资源列表
+}
+
+type ListTagRequest struct {
+	Page     int64  `json:"page,default=1"`       // 页码
+	PageSize int64  `json:"page_size,default=10"` // 每页数量
+	Name     string `json:"name,optional"`        // 标签名称（模糊查询）
+}
+
+type ListTagResponse struct {
+	Total int64         `json:"total"` // 总数
+	List  []TagResponse `json:"list"`  // 标签列表
 }
 
 type Model struct {
@@ -85,13 +132,24 @@ type Model struct {
 }
 
 type Resource struct {
-	Id        int64  `json:"id"`         // 主键
-	URL       string `json:"url"`        // URL链接
-	Title     string `json:"title"`      // 标题
-	Content   string `json:"content"`    // 内容
-	Type      string `json:"type"`       // 类型
-	CreatedAt string `json:"created_at"` // 创建时间
-	UpdatedAt string `json:"updated_at"` // 更新时间
+	Id        int64    `json:"id"`         // 主键
+	URL       string   `json:"url"`        // URL链接
+	Title     string   `json:"title"`      // 标题
+	Content   string   `json:"content"`    // 内容
+	Type      string   `json:"type"`       // 类型
+	Tags      []string `json:"tags"`       // 标签
+	CreatedAt string   `json:"created_at"` // 创建时间
+	UpdatedAt string   `json:"updated_at"` // 更新时间
+}
+
+type TagResponse struct {
+	Uid         string `json:"uid"`         // 标签唯一标识
+	Name        string `json:"name"`        // 标签名称
+	Description string `json:"description"` // 标签描述
+	Color       string `json:"color"`       // 标签颜色
+	Icon        string `json:"icon"`        // 标签图标
+	CreatedAt   string `json:"created_at"`  // 创建时间
+	UpdatedAt   string `json:"updated_at"`  // 更新时间
 }
 
 type URLRequest struct {
@@ -117,9 +175,29 @@ type UpdateModelRequest struct {
 }
 
 type UpdateResourceRequest struct {
-	Id      int64  `json:"id"`      // 主键
-	URL     string `json:"url"`     // URL链接
-	Title   string `json:"title"`   // 标题
-	Content string `json:"content"` // 内容
-	Type    string `json:"type"`    // 类型
+	Id      int64    `json:"id"`       // 主键
+	URL     string   `json:"url"`      // URL链接
+	Title   string   `json:"title"`    // 标题
+	Content string   `json:"content"`  // 内容
+	Type    string   `json:"type"`     // 类型
+	TagUids []string `json:"tag_uids"` // 标签
+}
+
+type UpdateTagRequest struct {
+	Uid         string `json:"uid,optional"` // 标签唯一标识
+	Name        string `json:"name"`         // 标签名称
+	Description string `json:"description"`  // 标签描述
+	Color       string `json:"color"`        // 标签颜色
+	Icon        string `json:"icon"`         // 标签图标
+}
+
+type UpdateTagResponse struct {
+	Id          int64  `json:"id"`          // 主键ID
+	Uid         string `json:"uid"`         // 标签唯一标识
+	Name        string `json:"name"`        // 标签名称
+	Description string `json:"description"` // 标签描述
+	Color       string `json:"color"`       // 标签颜色
+	Icon        string `json:"icon"`        // 标签图标
+	CreatedAt   string `json:"created_at"`  // 创建时间
+	UpdatedAt   string `json:"updated_at"`  // 更新时间
 }

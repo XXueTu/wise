@@ -9,6 +9,7 @@ type ServiceContext struct {
 	Config        config.Config
 	ModelsModel   *model.ModelsModel
 	ResourceModel *model.ResourceModel
+	TagsModel     *model.TagsModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -17,5 +18,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Config:        c,
 		ModelsModel:   model.NewModelsModel(db),
 		ResourceModel: model.NewResourceModel(db),
+		TagsModel:     model.NewTagsModel(db),
 	}
 }
