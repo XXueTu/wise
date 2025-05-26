@@ -2,39 +2,12 @@ package model
 
 import (
 	"context"
-	"time"
 
 	"github.com/uptrace/bun"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-// Resource 资源模型
-type Resource struct {
-	bun.BaseModel `bun:"table:resources,alias:r"`
-
-	ID        int64     `bun:"id,pk,autoincrement" json:"id"`
-	URL       string    `bun:"url,notnull" json:"url"`         // 资源URL
-	Title     string    `bun:"title,notnull" json:"title"`     // 资源标题
-	Content   string    `bun:"content,notnull" json:"content"` // 资源内容
-	Type      string    `bun:"type,notnull" json:"type"`       // 资源类型（如：wechat, zhihu等）
-	Tags      string    `bun:"tags,notnull" json:"tags"`       // 资源标签
-	CreatedAt time.Time `bun:"created_at,notnull,default:current_timestamp" json:"created_at"`
-	UpdatedAt time.Time `bun:"updated_at,notnull,default:current_timestamp" json:"updated_at"`
-}
-
-// BeforeCreate 创建前的钩子
-func (r *Resource) BeforeCreate(ctx context.Context) (context.Context, error) {
-	now := time.Now()
-	r.CreatedAt = now
-	r.UpdatedAt = now
-	return ctx, nil
-}
-
-// BeforeUpdate 更新前的钩子
-func (r *Resource) BeforeUpdate(ctx context.Context) (context.Context, error) {
-	r.UpdatedAt = time.Now()
-	return ctx, nil
-}
+var _ ResourceGen = (*ResourceModel)(nil)
 
 type ResourceModel struct {
 	db *bun.DB
@@ -46,15 +19,13 @@ func NewResourceModel(db *bun.DB) *ResourceModel {
 	}
 }
 
-// ResourceList 资源列表返回结构
-type ResourceList struct {
-	Total int64       `json:"total"` // 总记录数
-	List  []*Resource `json:"list"`  // 资源列表
-}
-
 // TableName 返回表名
 func (r *ResourceModel) TableName() string {
 	return "resources"
+}
+
+func (r *ResourceModel) InitData() {
+
 }
 
 // Create 创建资源
@@ -104,6 +75,21 @@ func (r *ResourceModel) Delete(ctx context.Context, id int64) error {
 	return err
 }
 
+func (r *ResourceModel) Get(ctx context.Context, id int64) (*Resource, error) {
+	var resource Resource
+	err := r.db.NewSelect().Model(&resource).Where("id = ?", id).Scan(ctx)
+	if err != nil {
+		logx.Error("Get error", err)
+	}
+	return &resource, err
+}
+
+// ResourceList 资源列表返回结构
+type ResourceList struct {
+	Total int64       `json:"total"` // 总记录数
+	List  []*Resource `json:"list"`  // 资源列表
+}
+
 // GetList 分页查询资源列表
 func (r *ResourceModel) GetList(ctx context.Context, page, size int, resourceType, title string, tagUids []string) (*ResourceList, error) {
 	// 构建查询
@@ -146,13 +132,4 @@ func (r *ResourceModel) GetList(ctx context.Context, page, size int, resourceTyp
 		Total: int64(total),
 		List:  resources,
 	}, nil
-}
-
-func (r *ResourceModel) Get(ctx context.Context, id int64) (*Resource, error) {
-	var resource Resource
-	err := r.db.NewSelect().Model(&resource).Where("id = ?", id).Scan(ctx)
-	if err != nil {
-		logx.Error("Get error", err)
-	}
-	return &resource, err
 }

@@ -4,45 +4,12 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/uptrace/bun"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-// Models 模型集合
-type Models struct {
-	bun.BaseModel `bun:"table:models,alias:m"`
-
-	ID            int64     `bun:"id,pk,autoincrement" json:"id"`
-	BaseUrl       string    `bun:"base_url,notnull" json:"base_url"`               // 资源链接 // https://ark.cn-beijing.volces.com/api/v3
-	Config        string    `bun:"config,notnull" json:"config"`                   // 资源配置 {"apiKey":"9567f3a1-7e2e-4fa7-a8db-5a7ee0926"}
-	Type          string    `bun:"type,notnull" json:"type"`                       // 资源类型（如：doubao, ollama等）
-	ModelName     string    `bun:"model_name,notnull" json:"model_name"`           // 模型名称 豆包1.5
-	ModelRealName string    `bun:"model_real_name,notnull" json:"model_real_name"` // 模型名称 doubao-1-5-pro-32k-250115
-	Status        string    `bun:"status,notnull" json:"status"`                   // 状态（如：active,inactive,available,not_available）
-	Tag           string    `bun:"tag,notnull" json:"tag"`                         // 标签（如：doubao, ollama等）
-	CreatedAt     time.Time `bun:"created_at,notnull,default:current_timestamp" json:"created_at"`
-	UpdatedAt     time.Time `bun:"updated_at,notnull,default:current_timestamp" json:"updated_at"`
-}
-
-// BeforeCreate 创建前的钩子
-func (m *Models) BeforeCreate(ctx context.Context) (context.Context, error) {
-	now := time.Now()
-	m.CreatedAt = now
-	m.UpdatedAt = now
-	return ctx, nil
-}
-
-// BeforeUpdate 更新前的钩子
-func (m *Models) BeforeUpdate(ctx context.Context) (context.Context, error) {
-	m.UpdatedAt = time.Now()
-	return ctx, nil
-}
-
-type ModelsModel struct {
-	db *bun.DB
-}
+var _ ModelsGen = (*ModelsModel)(nil)
 
 func NewModelsModel(db *bun.DB) *ModelsModel {
 	return &ModelsModel{
@@ -50,10 +17,8 @@ func NewModelsModel(db *bun.DB) *ModelsModel {
 	}
 }
 
-// ModelsList 模型列表返回结构
-type ModelsList struct {
-	Total int64     `json:"total"` // 总记录数
-	List  []*Models `json:"list"`  // 模型列表
+type ModelsModel struct {
+	db *bun.DB
 }
 
 // TableName 返回表名
@@ -132,6 +97,12 @@ func (m *ModelsModel) Get(ctx context.Context, id int64) (*Models, error) {
 	var model Models
 	err := m.db.NewSelect().Model(&model).Where("id = ?", id).Scan(ctx)
 	return &model, err
+}
+
+// ModelsList 模型列表返回结构
+type ModelsList struct {
+	Total int64     `json:"total"` // 总记录数
+	List  []*Models `json:"list"`  // 模型列表
 }
 
 // GetList 分页查询模型列表

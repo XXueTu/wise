@@ -2,39 +2,12 @@ package model
 
 import (
 	"context"
-	"time"
 
 	"github.com/uptrace/bun"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-// Tags 标签集合
-type Tags struct {
-	bun.BaseModel `bun:"table:tags,alias:t"`
-
-	ID          int64     `bun:"id,pk,autoincrement" json:"id"`
-	Uid         string    `bun:"uid,notnull" json:"uid"`                 // 标签唯一标识
-	Name        string    `bun:"name,notnull" json:"name"`               // 标签名称
-	Description string    `bun:"description,notnull" json:"description"` // 标签描述
-	Color       string    `bun:"color,notnull" json:"color"`             // 标签颜色
-	Icon        string    `bun:"icon,notnull" json:"icon"`               // 标签图标
-	CreatedAt   time.Time `bun:"created_at,notnull,default:current_timestamp" json:"created_at"`
-	UpdatedAt   time.Time `bun:"updated_at,notnull,default:current_timestamp" json:"updated_at"`
-}
-
-// BeforeCreate 创建前的钩子
-func (m *Tags) BeforeCreate(ctx context.Context) (context.Context, error) {
-	now := time.Now()
-	m.CreatedAt = now
-	m.UpdatedAt = now
-	return ctx, nil
-}
-
-// BeforeUpdate 更新前的钩子
-func (m *Tags) BeforeUpdate(ctx context.Context) (context.Context, error) {
-	m.UpdatedAt = time.Now()
-	return ctx, nil
-}
+var _ TagGen = (*TagsModel)(nil)
 
 type TagsModel struct {
 	db *bun.DB
@@ -44,12 +17,6 @@ func NewTagsModel(db *bun.DB) *TagsModel {
 	return &TagsModel{
 		db: db,
 	}
-}
-
-// TagsList 标签列表返回结构
-type TagsList struct {
-	Total int64   `json:"total"` // 总记录数
-	List  []*Tags `json:"list"`  // 标签列表
 }
 
 // TableName 返回表名
@@ -141,6 +108,12 @@ func (m *TagsModel) GetName(ctx context.Context, name string) (*Tags, error) {
 	var tag Tags
 	err := m.db.NewSelect().Model(&tag).Where("name = ?", name).Scan(ctx)
 	return &tag, err
+}
+
+// TagsList 标签列表返回结构
+type TagsList struct {
+	Total int64   `json:"total"` // 总记录数
+	List  []*Tags `json:"list"`  // 标签列表
 }
 
 // GetList 分页查询标签列表
