@@ -20,24 +20,17 @@ export function TagSelector({ value, onChange, maxDisplayedTags = 4, placeholder
   const [inputValue, setInputValue] = useState("")
   const [tags, setTags] = useState<Tag[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const [currentPage, setCurrentPage] = useState(1)
-  const pageSize = 1000
+  const [menuIsOpen, setMenuIsOpen] = useState(false)
 
   const loadTags = async (keyword: string) => {
     try {
       setIsLoading(true)
       const data = await tagService.getTags({
-        page: currentPage,
-        page_size: pageSize,
+        page: 1,
+        page_size: 1000,
         name: keyword || undefined
       })
-      const newTags = data.list || []
-      setTags(prevTags => {
-        const uniqueTags = newTags.filter(
-          newTag => !prevTags.some(prevTag => prevTag.uid === newTag.uid)
-        )
-        return [...prevTags, ...uniqueTags]
-      })
+      setTags(data.list || [])
     } catch (error) {
       console.error("加载标签失败:", error)
     } finally {
@@ -51,14 +44,16 @@ export function TagSelector({ value, onChange, maxDisplayedTags = 4, placeholder
 
   const handleInputChange = (newValue: string) => {
     setInputValue(newValue)
-    setCurrentPage(1)
-    setTags([])
+    setTags([]) // 清空当前标签列表
     loadTags(newValue)
   }
 
-  const handleMenuScrollToBottom = () => {
-    loadTags(inputValue)
-    setCurrentPage(currentPage + 1)
+  const handleMenuOpen = () => {
+    setMenuIsOpen(true)
+  }
+
+  const handleMenuClose = () => {
+    setMenuIsOpen(false)
   }
 
   const formatOptionLabel = (option: TagOption) => (
@@ -94,12 +89,19 @@ export function TagSelector({ value, onChange, maxDisplayedTags = 4, placeholder
       options={options}
       onChange={(newValue) => onChange(newValue.map(v => v.value))}
       onInputChange={handleInputChange}
-      onMenuScrollToBottom={handleMenuScrollToBottom}
       isLoading={isLoading}
       formatOptionLabel={formatOptionLabel}
       placeholder={placeholder}
       noOptionsMessage={() => "没有找到标签"}
       loadingMessage={() => "加载中..."}
+      menuIsOpen={menuIsOpen}
+      onMenuOpen={handleMenuOpen}
+      onMenuClose={handleMenuClose}
+      onMenuScrollToBottom={() => {}}
+      isSearchable={true}
+      isClearable={false}
+      blurInputOnSelect={false}
+      captureMenuScroll={false}
       styles={{
         control: (base) => ({
           ...base,
