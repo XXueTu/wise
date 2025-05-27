@@ -150,3 +150,14 @@ func (m *TagsModel) GetList(ctx context.Context, page, size int64, name string) 
 		List:  tags,
 	}, nil
 }
+
+func (m *TagsModel) FindBatchByNames(ctx context.Context, names []string) ([]*Tags, error) {
+	var tags []*Tags
+	err := m.db.NewSelect().Model(&tags).Where("name IN (?)", bun.In(names)).Scan(ctx)
+	return tags, err
+}
+
+func (m *TagsModel) CreateBatch(ctx context.Context, tags []Tags) error {
+	_, err := m.db.NewInsert().Model(&tags).Exec(ctx)
+	return err
+}

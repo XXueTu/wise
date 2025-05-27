@@ -24,3 +24,26 @@ GET http://127.0.0.1:8888/wise/api/resources/list?page=1&page_size=10
 User-Agent: Apifox/1.0.0 (https://apifox.com)
 Content-Type: application/json
 
+
+### 创建标签
+POST http://127.0.0.1:8888/wise/api/tag/batch
+User-Agent: Apifox/1.0.0 (https://apifox.com)
+Content-Type: application/json
+
+{
+  "tags": [
+    {
+      "name": "test3",
+      "description": "test",
+      "color": "#000000",
+      "icon": "https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png"
+    }, 
+    {
+      "name": "test4",
+      "description": "test2",
+      "color": "#000000",
+      "icon": "https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png"
+    }
+  ]
+}
+

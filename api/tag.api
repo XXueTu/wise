@@ -1,10 +1,10 @@
 syntax = "v1"
 
 type CreateTagRequest {
-	Name        string `json:"name"`         // 标签名称
-	Description string `json:"description"`  // 标签描述
-	Color       string `json:"color"`        // 标签颜色
-	Icon        string `json:"icon"`         // 标签图标
+	Name        string `json:"name"`        // 标签名称
+	Description string `json:"description"` // 标签描述
+	Color       string `json:"color"`       // 标签颜色
+	Icon        string `json:"icon"`        // 标签图标
 }
 
 type CreateTagResponse {
@@ -16,6 +16,16 @@ type CreateTagResponse {
 	Icon        string `json:"icon"`        // 标签图标
 	CreatedAt   string `json:"created_at"`  // 创建时间
 	UpdatedAt   string `json:"updated_at"`  // 更新时间
+}
+
+type CreateBatchTagRequest {
+	Tags []CreateTagRequest `json:"tags"`
+}
+
+type CreateBatchTagResponse {
+	CreatedTotal       int64               `json:"created_total"`        // 创建总数
+	ExistedTotal       int64               `json:"existed_total"`        // 已存在总数
+	CreateTagResponses []CreateTagResponse `json:"create_tag_responses"` // 结果
 }
 
 type UpdateTagRequest {
@@ -81,6 +91,10 @@ service wise-api {
 	@doc "创建标签"
 	@handler CreateTagHandler
 	post /api/tag (CreateTagRequest) returns (CreateTagResponse)
+
+	@doc "批量创建标签"
+	@handler CreateBatchTagHandler
+	post /api/tag/batch (CreateBatchTagRequest) returns (CreateBatchTagResponse)
 
 	@doc "更新标签"
 	@handler UpdateTagHandler

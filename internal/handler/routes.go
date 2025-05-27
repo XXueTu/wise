@@ -139,6 +139,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: tags.GetTagHandler(serverCtx),
 			},
 			{
+				// 批量创建标签
+				Method:  http.MethodPost,
+				Path:    "/api/tag/batch",
+				Handler: tags.CreateBatchTagHandler(serverCtx),
+			},
+			{
 				// 获取标签列表
 				Method:  http.MethodGet,
 				Path:    "/api/tags",

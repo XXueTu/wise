@@ -32,6 +32,8 @@ type TagGen interface {
 	GetUids(ctx context.Context, uids []string) ([]*Tags, error)
 	GetName(ctx context.Context, name string) (*Tags, error)
 	GetList(ctx context.Context, page, size int64, name string) (*TagsList, error)
+	FindBatchByNames(ctx context.Context, names []string) ([]*Tags, error)
+	CreateBatch(ctx context.Context, tags []Tags) error
 }
 
 // BeforeCreate 创建前的钩子

@@ -16,6 +16,16 @@ type CreateAiResourceRequest struct {
 	URL string `json:"url"` // URL链接
 }
 
+type CreateBatchTagRequest struct {
+	Tags []CreateTagRequest `json:"tags"`
+}
+
+type CreateBatchTagResponse struct {
+	CreatedTotal       int64               `json:"created_total"`        // 创建总数
+	ExistedTotal       int64               `json:"existed_total"`        // 已存在总数
+	CreateTagResponses []CreateTagResponse `json:"create_tag_responses"` // 结果
+}
+
 type CreateModelRequest struct {
 	BaseUrl       string   `json:"base_url"`        // 基础URL
 	Config        string   `json:"config"`          // 配置信息
