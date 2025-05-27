@@ -7,6 +7,7 @@ import (
 
 	"github.com/XXueTu/wise/internal/model"
 	"github.com/XXueTu/wise/internal/svc"
+	"github.com/XXueTu/wise/internal/task"
 	"github.com/XXueTu/wise/internal/types"
 	"github.com/XXueTu/wise/pkg/spiders"
 )
@@ -49,5 +50,13 @@ func (l *UrlLogic) Url(req *types.URLRequest) (resp *types.URLResponse, err erro
 	resp.Link = req.URL
 	resp.Tag = []string{"微信公众号"}
 	logx.Info("url response:", resp)
+
+	err = task.CreateUrlMarkTask(l.ctx, task.UrlMarkTaskArgs{
+		Url: req.URL,
+	})
+	if err != nil {
+		return resp, err
+	}
+
 	return resp, nil
 }

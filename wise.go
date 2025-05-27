@@ -11,6 +11,7 @@ import (
 	"github.com/XXueTu/wise/internal/config"
 	"github.com/XXueTu/wise/internal/handler"
 	"github.com/XXueTu/wise/internal/svc"
+	"github.com/XXueTu/wise/internal/task"
 )
 
 var configFile = flag.String("f", "etc/wise-api.yaml", "the config file")
@@ -43,7 +44,8 @@ func main() {
 
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
-
+	// 启动任务执行器
+	task.NewTaskActuator(ctx).Start()
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
 	server.Start()
 }

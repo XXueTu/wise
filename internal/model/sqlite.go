@@ -84,10 +84,18 @@ func InitDB() *bun.DB {
 	db.NewCreateTable().Model((*Tags)(nil)).IfNotExists().Exec(context.Background(),
 		(*Tags)(nil),
 	)
+	db.NewCreateTable().Model((*Tasks)(nil)).IfNotExists().Exec(context.Background(),
+		(*Tasks)(nil),
+	)
+	db.NewCreateTable().Model((*TaskPlans)(nil)).IfNotExists().Exec(context.Background(),
+		(*TaskPlans)(nil),
+	)
 
 	// 初始化表数据
 	NewModelsModel(db).InitData()
 	NewTagsModel(db).InitData()
+	NewTasksModel(db).InitData()
+	NewTaskPlansModel(db).InitData()
 	return db
 }
 
