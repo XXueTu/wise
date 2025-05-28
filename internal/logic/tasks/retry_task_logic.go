@@ -31,7 +31,7 @@ func (l *RetryTaskLogic) RetryTask(req *types.RetryTaskRequest) (resp *types.Tas
 	if err != nil {
 		return nil, errors.New("任务不存在")
 	}
-	task.Status = model.TaskStatusRunning
+	task.Status = model.TaskStatusRetry
 	task.CurrentStep = 0
 	if err := l.svcCtx.TasksModel.Update(l.ctx, task); err != nil {
 		return nil, errors.New("重试任务失败")

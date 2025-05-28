@@ -36,6 +36,12 @@ export function Layout() {
                 模型管理
               </Button>
               <Button
+                variant={location.pathname === "/tasks" ? "default" : "ghost"}
+                onClick={() => navigate("/tasks")}
+              >
+                任务管理
+              </Button>
+              <Button
                 variant={location.pathname === "/tags" ? "default" : "ghost"}
                 onClick={() => navigate("/tags")}
               >

@@ -133,7 +133,7 @@ type GetTaskRequest struct {
 }
 
 type GetTaskVisualizationRequest struct {
-	Tid string `json:"tid"` // 任务唯一标识
+	Tid string `form:"tid"` // 任务唯一标识
 }
 
 type ListModelRequest struct {

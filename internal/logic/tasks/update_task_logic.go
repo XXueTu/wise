@@ -31,6 +31,7 @@ func (l *UpdateTaskLogic) UpdateTask(req *types.UpdateTaskRequest) (resp *types.
 		return nil, errors.New("任务不存在")
 	}
 	task.Name = req.Name
+	task.Status = req.Status
 	if err := l.svcCtx.TasksModel.Update(l.ctx, task); err != nil {
 		return nil, errors.New("更新任务失败")
 	}
