@@ -113,12 +113,27 @@ const PaginationEllipsis = ({
 )
 PaginationEllipsis.displayName = "PaginationEllipsis"
 
+const PaginationTotal = ({
+  total,
+  className,
+  ...props
+}: { total: number } & React.ComponentProps<"div">) => (
+  <div
+    className={cn("flex items-center text-sm text-muted-foreground", className)}
+    {...props}
+  >
+    共 {total} 条
+  </div>
+)
+PaginationTotal.displayName = "PaginationTotal"
+
 export {
-    Pagination,
-    PaginationContent,
-    PaginationEllipsis,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+  PaginationTotal
 }

@@ -41,6 +41,7 @@ func (l *ListTaskLogic) ListTask(req *types.ListTaskRequest) (resp *types.ListTa
 			CurrentState: task.CurrentState,
 			TotalSteps:   task.TotalSteps,
 			CurrentStep:  task.CurrentStep,
+			RetryCount:   task.RetryCount,
 			Params:       task.Params,
 			Result:       task.Result,
 			Error:        task.Error,

@@ -15,6 +15,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
+  PaginationTotal,
 } from "@/components/ui/pagination"
 import { Progress } from "@/components/ui/progress"
 import {
@@ -293,7 +294,8 @@ export function TaskManager() {
       params: formData.get("params") as string,
       total_steps: Number(formData.get("total_steps")),
       current_state: formData.get("current_state") as string,
-      status: formData.get("status") as string || editingTask?.status || "init"
+      status: formData.get("status") as string || editingTask?.status || "init",
+      retry_count: Number(formData.get("retry_count") || 0)
     }
 
     try {
@@ -357,8 +359,9 @@ export function TaskManager() {
             <TableHead>名称</TableHead>
             <TableHead>类型</TableHead>
             <TableHead>状态</TableHead>
-            <TableHead>当前状态</TableHead>
+            <TableHead>当前进度</TableHead>
             <TableHead>进度</TableHead>
+            <TableHead>重试次数</TableHead>
             <TableHead>创建时间</TableHead>
             <TableHead>操作</TableHead>
           </TableRow>
@@ -382,6 +385,13 @@ export function TaskManager() {
                       {task.current_step}/{task.total_steps}
                     </div>
                   </div>
+                </TableCell>
+                <TableCell>
+                  <span className={`px-2 py-1 rounded text-sm ${
+                    task.retry_count > 0 ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'
+                  }`}>
+                    {task.retry_count}
+                  </span>
                 </TableCell>
                 <TableCell>{task.created_at}</TableCell>
                 <TableCell>
@@ -449,7 +459,7 @@ export function TaskManager() {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={8} className="text-center">
+              <TableCell colSpan={9} className="text-center">
                 暂无数据
               </TableCell>
             </TableRow>
@@ -460,6 +470,7 @@ export function TaskManager() {
       {tasks && tasks.length > 0 && (
         <div className="mt-4">
           <Pagination>
+            <PaginationTotal total={total} />
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
@@ -545,12 +556,22 @@ export function TaskManager() {
                 />
               </div>
               <div className="grid gap-2">
-                <label htmlFor="current_state">当前状态</label>
+                <label htmlFor="current_state">当前步骤</label>
                 <Input
                   id="current_state"
                   name="current_state"
                   defaultValue={editingTask?.current_state}
                   required
+                />
+              </div>
+              <div className="grid gap-2">
+                <label htmlFor="retry_count">重试次数</label>
+                <Input
+                  id="retry_count"
+                  name="retry_count"
+                  type="number"
+                  defaultValue={editingTask?.retry_count || 0}
+                  min={0}
                 />
               </div>
               <div className="grid gap-2">
@@ -592,7 +613,7 @@ export function TaskManager() {
                       <span className="font-medium">{visualizationData.name}</span>
                     </div>
                     <div>
-                      <span className="text-sm text-gray-500">当前状态：</span>
+                      <span className="text-sm text-gray-500">当前步骤：</span>
                       <span className={`px-2 py-1 rounded text-sm ${
                         visualizationData.status === 'completed' ? 'bg-green-100 text-green-800' :
                         visualizationData.status === 'failed' ? 'bg-red-100 text-red-800' :

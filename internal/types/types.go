@@ -83,6 +83,7 @@ type CreateTaskResponse struct {
 	CurrentState string `json:"current_state"` // 当前状态机
 	TotalSteps   int64  `json:"total_steps"`   // 总步骤
 	CurrentStep  int64  `json:"current_step"`  // 当前步骤
+	RetryCount   int64  `json:"retry_count"`   // 重试次数
 	Params       string `json:"params"`        // 任务参数
 	Result       string `json:"result"`        // 任务结果
 	Duration     int64  `json:"duration"`      // 任务耗时
@@ -259,6 +260,7 @@ type TaskResponse struct {
 	CurrentState string `json:"current_state"` // 当前状态机
 	TotalSteps   int64  `json:"total_steps"`   // 总步骤
 	CurrentStep  int64  `json:"current_step"`  // 当前步骤
+	RetryCount   int64  `json:"retry_count"`   // 重试次数
 	Params       string `json:"params"`        // 任务参数
 	Result       string `json:"result"`        // 任务结果
 	Duration     int64  `json:"duration"`      // 任务耗时
@@ -338,6 +340,7 @@ type UpdateTaskRequest struct {
 	CurrentState string `json:"current_state,optional"` // 当前状态机
 	CurrentStep  int64  `json:"current_step,optional"`  // 当前步骤
 	Result       string `json:"result,optional"`        // 任务结果
+	RetryCount   int64  `json:"retry_count,optional"`   // 重试次数
 	Error        string `json:"error,optional"`         // 任务错误
 	Extend       string `json:"extend,optional"`        // 扩展字段
 }
@@ -351,6 +354,7 @@ type UpdateTaskResponse struct {
 	CurrentState string `json:"current_state"` // 当前状态机
 	TotalSteps   int64  `json:"total_steps"`   // 总步骤
 	CurrentStep  int64  `json:"current_step"`  // 当前步骤
+	RetryCount   int64  `json:"retry_count"`   // 重试次数
 	Params       string `json:"params"`        // 任务参数
 	Result       string `json:"result"`        // 任务结果
 	Duration     int64  `json:"duration"`      // 任务耗时

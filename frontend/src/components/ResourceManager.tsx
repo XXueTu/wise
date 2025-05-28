@@ -16,6 +16,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
+  PaginationTotal,
 } from "@/components/ui/pagination"
 import {
   Table,
@@ -448,6 +449,7 @@ export function ResourceManager() {
       {resources && resources.length > 0 && (
         <div className="mt-4">
           <Pagination>
+            <PaginationTotal total={total} />
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious

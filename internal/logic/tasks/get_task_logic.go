@@ -40,6 +40,7 @@ func (l *GetTaskLogic) GetTask(req *types.GetTaskRequest) (resp *types.TaskRespo
 		CurrentState: task.CurrentState,
 		Status:       task.Status,
 		CurrentStep:  task.CurrentStep,
+		RetryCount:   task.RetryCount,
 		Result:       task.Result,
 		Error:        task.Error,
 		Extend:       task.Extend,

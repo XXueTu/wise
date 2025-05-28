@@ -27,8 +27,9 @@ const (
 
 // UrlMarkState URL标记任务状态
 type UrlMarkState struct {
-	Code string // 状态代码
-	Name string // 状态名称
+	Index int64  // 状态索引
+	Code  string // 状态代码
+	Name  string // 状态名称
 }
 
 var UrlMarkStates = struct {
@@ -40,13 +41,13 @@ var UrlMarkStates = struct {
 	Vector UrlMarkState
 	Index  UrlMarkState
 }{
-	Start:  UrlMarkState{Code: "start", Name: "开始"},
-	Check:  UrlMarkState{Code: "check", Name: "检查"},
-	Read:   UrlMarkState{Code: "read", Name: "读取"},
-	Split:  UrlMarkState{Code: "split", Name: "拆分"},
-	Mark:   UrlMarkState{Code: "mark", Name: "标记"},
-	Vector: UrlMarkState{Code: "vector", Name: "向量化"},
-	Index:  UrlMarkState{Code: "index", Name: "索引"},
+	Start:  UrlMarkState{Index: 1, Code: "start", Name: "开始"},
+	Check:  UrlMarkState{Index: 2, Code: "check", Name: "检查"},
+	Read:   UrlMarkState{Index: 3, Code: "read", Name: "读取"},
+	Split:  UrlMarkState{Index: 4, Code: "split", Name: "拆分"},
+	Mark:   UrlMarkState{Index: 5, Code: "mark", Name: "标记"},
+	Vector: UrlMarkState{Index: 6, Code: "vector", Name: "向量化"},
+	Index:  UrlMarkState{Index: 7, Code: "index", Name: "索引"},
 }
 
 // UrlMarkTaskArgs URL标记任务参数

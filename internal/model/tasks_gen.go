@@ -18,6 +18,7 @@ type Tasks struct {
 	CurrentState  string    `bun:"current_state,notnull" json:"current_state"` // 当前状态机
 	TotalSteps    int64     `bun:"total_steps,notnull" json:"total_steps"`     // 总步骤
 	CurrentStep   int64     `bun:"current_step,notnull" json:"current_step"`   // 当前步骤
+	RetryCount    int64     `bun:"retry_count,notnull" json:"retry_count"`     // 重试次数
 	Params        string    `bun:"params,notnull" json:"params"`               // 任务参数
 	Result        string    `bun:"result,notnull" json:"result"`               // 任务结果
 	Duration      int64     `bun:"duration,notnull" json:"duration"`           // 任务耗时 ms
@@ -39,6 +40,7 @@ type TasksGen interface {
 	GetStatusLimit(ctx context.Context, status string, limit int) ([]*Tasks, error)
 	GetPage(ctx context.Context, page int64, pageSize int64, name string, status string, types string) (*TasksList, error)
 	UpdateState(ctx context.Context, tid string, state string, result string) error
+	UpdateStateAndStep(ctx context.Context, tid string, state string, step int64, result string) error
 	UpdateStatus(ctx context.Context, tid string, status string, error string) error
 }
 

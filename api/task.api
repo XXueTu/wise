@@ -17,6 +17,7 @@ type CreateTaskResponse {
 	CurrentState string `json:"current_state"` // 当前状态机
 	TotalSteps   int64  `json:"total_steps"`   // 总步骤
 	CurrentStep  int64  `json:"current_step"`  // 当前步骤
+	RetryCount   int64  `json:"retry_count"`   // 重试次数
 	Params       string `json:"params"`        // 任务参数
 	Result       string `json:"result"`        // 任务结果
 	Duration     int64  `json:"duration"`      // 任务耗时
@@ -27,14 +28,15 @@ type CreateTaskResponse {
 }
 
 type UpdateTaskRequest {
-	Tid          string `json:"tid"`           // 任务唯一标识
-	Name         string `json:"name,optional"` // 任务名称
-	Status       string `json:"status,optional"` // 任务状态
+	Tid          string `json:"tid"`                    // 任务唯一标识
+	Name         string `json:"name,optional"`          // 任务名称
+	Status       string `json:"status,optional"`        // 任务状态
 	CurrentState string `json:"current_state,optional"` // 当前状态机
 	CurrentStep  int64  `json:"current_step,optional"`  // 当前步骤
-	Result       string `json:"result,optional"` // 任务结果
-	Error        string `json:"error,optional"`  // 任务错误
-	Extend       string `json:"extend,optional"` // 扩展字段
+	Result       string `json:"result,optional"`        // 任务结果
+	RetryCount   int64  `json:"retry_count,optional"`   // 重试次数
+	Error        string `json:"error,optional"`         // 任务错误
+	Extend       string `json:"extend,optional"`        // 扩展字段
 }
 
 type UpdateTaskResponse {
@@ -46,6 +48,7 @@ type UpdateTaskResponse {
 	CurrentState string `json:"current_state"` // 当前状态机
 	TotalSteps   int64  `json:"total_steps"`   // 总步骤
 	CurrentStep  int64  `json:"current_step"`  // 当前步骤
+	RetryCount   int64  `json:"retry_count"`   // 重试次数
 	Params       string `json:"params"`        // 任务参数
 	Result       string `json:"result"`        // 任务结果
 	Duration     int64  `json:"duration"`      // 任务耗时
@@ -76,8 +79,8 @@ type ListTaskRequest {
 }
 
 type ListTaskResponse {
-	Total int64            `json:"total"` // 总数
-	List  []TaskResponse   `json:"list"`  // 任务列表
+	Total int64          `json:"total"` // 总数
+	List  []TaskResponse `json:"list"`  // 任务列表
 }
 
 type TaskResponse {
@@ -88,6 +91,7 @@ type TaskResponse {
 	CurrentState string `json:"current_state"` // 当前状态机
 	TotalSteps   int64  `json:"total_steps"`   // 总步骤
 	CurrentStep  int64  `json:"current_step"`  // 当前步骤
+	RetryCount   int64  `json:"retry_count"`   // 重试次数
 	Params       string `json:"params"`        // 任务参数
 	Result       string `json:"result"`        // 任务结果
 	Duration     int64  `json:"duration"`      // 任务耗时
@@ -137,14 +141,14 @@ type TaskVisualizationResponse {
 }
 
 type TaskPlanDetail {
-	Pid       string `json:"pid"`       // 任务计划唯一标识
-	Name      string `json:"name"`      // 任务计划名称
-	Index     int64  `json:"index"`     // 任务计划索引
-	Status    string `json:"status"`    // 任务状态
-	Params    string `json:"params"`    // 任务参数
-	Result    string `json:"result"`    // 任务结果
-	Duration  int64  `json:"duration"`  // 任务耗时
-	Error     string `json:"error"`     // 任务错误
+	Pid       string `json:"pid"`        // 任务计划唯一标识
+	Name      string `json:"name"`       // 任务计划名称
+	Index     int64  `json:"index"`      // 任务计划索引
+	Status    string `json:"status"`     // 任务状态
+	Params    string `json:"params"`     // 任务参数
+	Result    string `json:"result"`     // 任务结果
+	Duration  int64  `json:"duration"`   // 任务耗时
+	Error     string `json:"error"`      // 任务错误
 	CreatedAt string `json:"created_at"` // 创建时间
 	UpdatedAt string `json:"updated_at"` // 更新时间
 }

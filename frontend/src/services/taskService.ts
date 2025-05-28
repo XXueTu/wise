@@ -8,6 +8,7 @@ export interface Task {
   current_state: string
   total_steps: number
   current_step: number
+  retry_count: number
   params: string
   result: string
   duration: number

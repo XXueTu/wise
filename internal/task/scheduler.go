@@ -138,7 +138,7 @@ func (m *StateMachine[F, T]) Run(ctx context.Context, tid string, params string,
 		}
 
 		// 更新任务状态
-		if err := m.svc.TasksModel.UpdateState(ctx, tid, plan.Types, "{}"); err != nil {
+		if err := m.svc.TasksModel.UpdateStateAndStep(ctx, tid, plan.Types, plan.Index, "{}"); err != nil {
 			logx.Errorf("更新任务状态失败: %v", err)
 			return err
 		}
@@ -194,6 +194,7 @@ func (m *StateMachine[F, T]) CreateTask(ctx context.Context, args F, taskName st
 		Types:        taskType,
 		Status:       model.TaskStatusInit,
 		CurrentState: m.states[0].Code,
+		RetryCount:   0,
 		TotalSteps:   int64(len(m.states)),
 		CurrentStep:  1,
 		Params:       string(argsJson),
@@ -214,7 +215,7 @@ func (m *StateMachine[F, T]) CreateTask(ctx context.Context, args F, taskName st
 			Pid:      uuid.New().String(),
 			Types:    state.Code,
 			Name:     state.Name,
-			Index:    int64(i),
+			Index:    int64(i + 1),
 			Status:   model.TaskPlanStatusInit,
 			Params:   string(argsJson),
 			Result:   "{}",
@@ -357,9 +358,9 @@ func (s *TaskScheduler) executeTask(task *model.Tasks) {
 	err := executor.Execute(ctx, task)
 	if err != nil {
 		// 检查是否需要重试
-		if task.CurrentStep < int64(executor.GetMaxRetries()) {
+		if task.RetryCount < int64(executor.GetMaxRetries()) {
 			task.Status = model.TaskStatusRetry
-			task.CurrentStep++
+			task.RetryCount++
 			task.Error = err.Error()
 			s.svc.TasksModel.Update(ctx, task)
 			// 等待重试间隔后重新调度

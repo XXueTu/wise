@@ -142,7 +142,19 @@ func (m *TasksModel) UpdateState(ctx context.Context, tid string, state string, 
 	return m.Update(ctx, task)
 }
 
-// UpdateState 更新任务状态
+// UpdateStateAndStep 更新任务状态和步骤
+func (m *TasksModel) UpdateStateAndStep(ctx context.Context, tid string, state string, step int64, result string) error {
+	task, err := m.GetByTid(ctx, tid)
+	if err != nil {
+		return err
+	}
+	task.CurrentState = state
+	task.CurrentStep = step
+	task.Result = result
+	return m.Update(ctx, task)
+}
+
+// UpdateStatus 更新任务状态
 func (m *TasksModel) UpdateStatus(ctx context.Context, tid string, status string, error string) error {
 	task, err := m.GetByTid(ctx, tid)
 	if err != nil {
