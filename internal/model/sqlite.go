@@ -3,6 +3,7 @@ package model
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -74,22 +75,16 @@ func InitDB() *bun.DB {
 		bundebug.WithWriter(&logxWriter{}),
 	))
 
-	// 创建表
-	db.NewCreateTable().Model((*Resource)(nil)).IfNotExists().Exec(context.Background(),
-		(*Resource)(nil),
-	)
-	db.NewCreateTable().Model((*Models)(nil)).IfNotExists().Exec(context.Background(),
-		(*Models)(nil),
-	)
-	db.NewCreateTable().Model((*Tags)(nil)).IfNotExists().Exec(context.Background(),
-		(*Tags)(nil),
-	)
-	db.NewCreateTable().Model((*Tasks)(nil)).IfNotExists().Exec(context.Background(),
-		(*Tasks)(nil),
-	)
-	db.NewCreateTable().Model((*TaskPlans)(nil)).IfNotExists().Exec(context.Background(),
-		(*TaskPlans)(nil),
-	)
+	// 读取并执行 schema.sql
+	schemaSQL, err := os.ReadFile("internal/model/schema.sql")
+	if err != nil {
+		panic(fmt.Sprintf("读取 schema.sql 失败: %v", err))
+	}
+
+	// 执行建表语句
+	if _, err := db.ExecContext(context.Background(), string(schemaSQL)); err != nil {
+		panic(fmt.Sprintf("执行 schema.sql 失败: %v", err))
+	}
 
 	// 初始化表数据
 	NewModelsModel(db).InitData()
