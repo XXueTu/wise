@@ -36,16 +36,12 @@ type TagGen interface {
 	CreateBatch(ctx context.Context, tags []Tags) error
 }
 
-// BeforeCreate 创建前的钩子
-func (m *Tags) BeforeCreate(ctx context.Context) (context.Context, error) {
-	now := time.Now()
-	m.CreatedAt = now
-	m.UpdatedAt = now
-	return ctx, nil
+func (m *Tags) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {
+	m.CreatedAt = time.Now()
+	return nil
 }
 
-// BeforeUpdate 更新前的钩子
-func (m *Tags) BeforeUpdate(ctx context.Context) (context.Context, error) {
+func (m *Tags) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) error {
 	m.UpdatedAt = time.Now()
-	return ctx, nil
+	return nil
 }

@@ -8,6 +8,7 @@ import (
 
 	"github.com/XXueTu/wise/internal/model"
 	"github.com/XXueTu/wise/internal/svc"
+	"github.com/XXueTu/wise/pkg/spiders"
 )
 
 /*
@@ -51,9 +52,11 @@ var UrlMarkStates = struct {
 
 // UrlMarkTaskArgs URL标记任务参数
 type UrlMarkTaskArgs struct {
-	Url   string `json:"url"`
-	Tid   string `json:"tid"`
-	PCode string `json:"pcode"` // 下一个状态代码
+	Url    string `json:"url"`
+	Tid    string `json:"tid"`
+	PCode  string `json:"pcode"`  // 下一个状态代码
+	Params string `json:"params"` // 参数
+	Result string `json:"result"` // 结果
 }
 
 // GetNextState 获取下一个状态
@@ -173,7 +176,22 @@ func (t *UrlMarkTask) Check(ctx context.Context, args UrlMarkTaskArgs) (UrlMarkT
 // Read 读取状态
 func (t *UrlMarkTask) Read(ctx context.Context, args UrlMarkTaskArgs) (UrlMarkTaskArgs, State[UrlMarkTaskArgs, *UrlMarkTask], error) {
 	logx.Info("url mark task read")
-	// TODO: 实现内容读取逻辑
+	// 检查是否是微信公众号链接
+	title, content, err := spiders.NewPattern().GetPattern(args.Url)
+	if err != nil {
+		return args, t.Read, err
+	}
+
+	err = t.svc.ResourceModel.Create(ctx, &model.Resource{
+		URL:     args.Url,
+		Title:   title,
+		Content: content,
+		Type:    "微信公众号",
+	})
+	if err != nil {
+		return args, t.Read, err
+	}
+
 	args.PCode = UrlMarkStates.Split.Code
 	return args, t.Split, nil
 }

@@ -33,16 +33,12 @@ type ModelsGen interface {
 	GetList(ctx context.Context, page, size int64, modelType string, tag []string, status, modelName string) (*ModelsList, error)
 }
 
-// BeforeCreate 创建前的钩子
-func (m *Models) BeforeCreate(ctx context.Context) (context.Context, error) {
-	now := time.Now()
-	m.CreatedAt = now
-	m.UpdatedAt = now
-	return ctx, nil
+func (m *Models) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {
+	m.CreatedAt = time.Now()
+	return nil
 }
 
-// BeforeUpdate 更新前的钩子
-func (m *Models) BeforeUpdate(ctx context.Context) (context.Context, error) {
+func (m *Models) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) error {
 	m.UpdatedAt = time.Now()
-	return ctx, nil
+	return nil
 }

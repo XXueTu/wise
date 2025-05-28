@@ -53,16 +53,12 @@ const (
 	TaskStatusCancelled = "cancelled" // 已取消
 )
 
-// BeforeCreate 创建前的钩子
-func (m *Tasks) BeforeCreate(ctx context.Context) (context.Context, error) {
-	now := time.Now()
-	m.CreatedAt = now
-	m.UpdatedAt = now
-	return ctx, nil
+func (m *Tasks) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {
+	m.CreatedAt = time.Now()
+	return nil
 }
 
-// BeforeUpdate 更新前的钩子
-func (m *Tasks) BeforeUpdate(ctx context.Context) (context.Context, error) {
+func (m *Tasks) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) error {
 	m.UpdatedAt = time.Now()
-	return ctx, nil
+	return nil
 }

@@ -32,16 +32,12 @@ type ResourceGen interface {
 	GetList(ctx context.Context, page, size int, resourceType, title string, tagUids []string) (*ResourceList, error)
 }
 
-// BeforeCreate 创建前的钩子
-func (r *Resource) BeforeCreate(ctx context.Context) (context.Context, error) {
-	now := time.Now()
-	r.CreatedAt = now
-	r.UpdatedAt = now
-	return ctx, nil
+func (m *Resource) BeforeInsert(ctx context.Context, query *bun.InsertQuery) error {
+	m.CreatedAt = time.Now()
+	return nil
 }
 
-// BeforeUpdate 更新前的钩子
-func (r *Resource) BeforeUpdate(ctx context.Context) (context.Context, error) {
-	r.UpdatedAt = time.Now()
-	return ctx, nil
+func (m *Resource) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) error {
+	m.UpdatedAt = time.Now()
+	return nil
 }

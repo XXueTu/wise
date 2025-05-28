@@ -22,8 +22,8 @@ type TaskPlans struct {
 	Result    string    `bun:"result,notnull" json:"result"`     // 任务结果
 	Duration  int64     `bun:"duration,notnull" json:"duration"` // 任务耗时 ms
 	Error     string    `bun:"error,notnull" json:"error"`       // 任务错误
-	CreatedAt time.Time `bun:"created_at,notnull,default:current_timestamp" json:"created_at"`
-	UpdatedAt time.Time `bun:"updated_at,notnull,default:current_timestamp" json:"updated_at"`
+	CreatedAt time.Time `bun:"created_at,notnull" json:"created_at"`
+	UpdatedAt time.Time `bun:"updated_at,notnull" json:"updated_at"`
 }
 
 type TaskPlansGen interface {
@@ -46,16 +46,18 @@ const (
 	TaskPlanStatusCancelled = "cancelled"
 )
 
-// BeforeCreate 创建前的钩子
-func (m *TaskPlans) BeforeCreate(ctx context.Context) (context.Context, error) {
-	now := time.Now()
-	m.CreatedAt = now
-	m.UpdatedAt = now
-	return ctx, nil
+func (m *TaskPlans) BeforeAppendModel(ctx context.Context, query bun.Query) error {
+	switch query.(type) {
+	case *bun.InsertQuery:
+		m.CreatedAt = time.Now()
+	case *bun.UpdateQuery:
+		m.UpdatedAt = time.Now()
+	}
+	return nil
 }
 
-// BeforeUpdate 更新前的钩子
-func (m *TaskPlans) BeforeUpdate(ctx context.Context) (context.Context, error) {
-	m.UpdatedAt = time.Now()
-	return ctx, nil
+func (m *TaskPlans) BeforeUpdate(ctx context.Context, query *bun.UpdateQuery) error {
+	times := time.Now()
+	m.UpdatedAt = times
+	return nil
 }
