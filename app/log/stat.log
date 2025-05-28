@@ -1,0 +1,1 @@
+2025-05-28T19:25:39.493+08:00	[32;1m stat [0;22m	(wise-api) - qps: 0.0/s, drops: 0, avg time: 0.0ms, med: 0.0ms, 90th: 0.0ms, 99th: 0.0ms, 99.9th: 0.0ms	caller=stat/metrics.go:210

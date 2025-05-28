@@ -17,8 +17,7 @@ interface TagSelectorProps {
 }
 
 export function TagSelector({ value, onChange, maxDisplayedTags = 4, placeholder = "选择标签..." }: TagSelectorProps) {
-  const [inputValue, setInputValue] = useState("")
-  const [tags, setTags] = useState<Tag[]>([])
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [menuIsOpen, setMenuIsOpen] = useState(false)
 
@@ -30,7 +29,7 @@ export function TagSelector({ value, onChange, maxDisplayedTags = 4, placeholder
         page_size: 1000,
         name: keyword || undefined
       })
-      setTags(data.list || [])
+      setSelectedTags(data.list || [])
     } catch (error) {
       console.error("加载标签失败:", error)
     } finally {
@@ -43,8 +42,6 @@ export function TagSelector({ value, onChange, maxDisplayedTags = 4, placeholder
   }, [])
 
   const handleInputChange = (newValue: string) => {
-    setInputValue(newValue)
-    setTags([]) // 清空当前标签列表
     loadTags(newValue)
   }
 
@@ -77,7 +74,7 @@ export function TagSelector({ value, onChange, maxDisplayedTags = 4, placeholder
     return Math.min(width, 300)
   }
 
-  const options = tags.map(tag => ({
+  const options = selectedTags.map(tag => ({
     value: tag.uid,
     label: tag.name
   }))

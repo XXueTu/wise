@@ -21,13 +21,14 @@ func main() {
 
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
-
+	fmt.Printf("config: %+v\n", c)
 	server := rest.MustNewServer(c.RestConf,
 		rest.WithFileServer("/", http.Dir("dist")),
 		rest.WithCustomCors(func(header http.Header) {
 			header.Add("Access-Control-Allow-Headers", "Content-Type,AccessToken,X-CSRF-Token,Authorization,Token,X-Token,X-User-Id,OS,Platform, Version")
 			header.Set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,PATCH")
 			header.Set("Access-Control-Expose-Headers", "Content-Length, Content-Type")
+			header.Set("Access-Control-Allow-Origin", "*") // 允许的源
 		}, nil, "*"))
 	defer server.Stop()
 

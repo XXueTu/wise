@@ -1,8 +1,19 @@
 import axios from 'axios'
 
+// 获取当前访问地址
+const getBaseUrl = () => {
+  const { protocol, hostname, port } = window.location
+  // 如果当前是开发环境（localhost），使用默认地址
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return 'http://127.0.0.1:8888/wise/api'
+  }
+  // 生产环境使用当前访问地址
+  return `${protocol}//${hostname}${port ? `:${port}` : ''}/wise/api`
+}
+
 // 创建 axios 实例
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8888/wise/api',
+  baseURL: getBaseUrl(),
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

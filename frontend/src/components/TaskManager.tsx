@@ -636,7 +636,7 @@ export function TaskManager() {
                 {/* 左侧时间线 */}
                 <div className="w-1/3 border-r p-4 overflow-y-auto">
                   <div className="space-y-4">
-                    {visualizationData.plans.map((plan, index) => (
+                    {visualizationData.plans.map((plan) => (
                       <div
                         key={plan.pid}
                         className={`cursor-pointer p-4 rounded-lg transition-colors ${
