@@ -12,6 +12,10 @@ type BaseResponse struct {
 	Result string `json:"result"` // 结果
 }
 
+type CancelTaskRequest struct {
+	Tid string `json:"tid"` // 任务唯一标识
+}
+
 type CreateAiResourceRequest struct {
 	URL string `json:"url"` // URL链接
 }
@@ -62,6 +66,32 @@ type CreateTagResponse struct {
 	UpdatedAt   string `json:"updated_at"`  // 更新时间
 }
 
+type CreateTaskRequest struct {
+	Name         string `json:"name"`          // 任务名称
+	Types        string `json:"types"`         // 任务类型
+	Params       string `json:"params"`        // 任务参数
+	TotalSteps   int64  `json:"total_steps"`   // 总步骤
+	CurrentState string `json:"current_state"` // 当前状态机
+}
+
+type CreateTaskResponse struct {
+	Id           int64  `json:"id"`            // 主键ID
+	Tid          string `json:"tid"`           // 任务唯一标识
+	Name         string `json:"name"`          // 任务名称
+	Types        string `json:"types"`         // 任务类型
+	Status       string `json:"status"`        // 任务状态
+	CurrentState string `json:"current_state"` // 当前状态机
+	TotalSteps   int64  `json:"total_steps"`   // 总步骤
+	CurrentStep  int64  `json:"current_step"`  // 当前步骤
+	Params       string `json:"params"`        // 任务参数
+	Result       string `json:"result"`        // 任务结果
+	Duration     int64  `json:"duration"`      // 任务耗时
+	Error        string `json:"error"`         // 任务错误
+	Extend       string `json:"extend"`        // 扩展字段
+	CreatedAt    string `json:"created_at"`    // 创建时间
+	UpdatedAt    string `json:"updated_at"`    // 更新时间
+}
+
 type DeleteModelRequest struct {
 	Id int64 `form:"id"` // 主键
 }
@@ -78,6 +108,14 @@ type DeleteTagResponse struct {
 	Result string `json:"result"` // 结果
 }
 
+type DeleteTaskRequest struct {
+	Tid string `json:"tid"` // 任务唯一标识
+}
+
+type DeleteTaskResponse struct {
+	Result string `json:"result"` // 结果
+}
+
 type GetModelRequest struct {
 	Id int64 `form:"id"` // 主键
 }
@@ -88,6 +126,14 @@ type GetResourceRequest struct {
 
 type GetTagRequest struct {
 	Uid string `json:"uid"` // 标签唯一标识
+}
+
+type GetTaskRequest struct {
+	Tid string `json:"tid"` // 任务唯一标识
+}
+
+type GetTaskVisualizationRequest struct {
+	Tid string `json:"tid"` // 任务唯一标识
 }
 
 type ListModelRequest struct {
@@ -128,6 +174,19 @@ type ListTagResponse struct {
 	List  []TagResponse `json:"list"`  // 标签列表
 }
 
+type ListTaskRequest struct {
+	Page     int64  `form:"page,default=1"`       // 页码
+	PageSize int64  `form:"page_size,default=10"` // 每页数量
+	Name     string `form:"name,optional"`        // 任务名称（模糊查询）
+	Types    string `form:"types,optional"`       // 任务类型
+	Status   string `form:"status,optional"`      // 任务状态
+}
+
+type ListTaskResponse struct {
+	Total int64          `json:"total"` // 总数
+	List  []TaskResponse `json:"list"`  // 任务列表
+}
+
 type Model struct {
 	Id            int64    `json:"id"`              // 主键
 	BaseUrl       string   `json:"base_url"`        // 基础URL
@@ -139,6 +198,10 @@ type Model struct {
 	Tag           []string `json:"tag"`             // 标签
 	CreatedAt     string   `json:"created_at"`      // 创建时间
 	UpdatedAt     string   `json:"updated_at"`      // 更新时间
+}
+
+type PauseTaskRequest struct {
+	Tid string `json:"tid"` // 任务唯一标识
 }
 
 type Resource struct {
@@ -153,6 +216,14 @@ type Resource struct {
 	UpdatedAt string   `json:"updated_at"` // 更新时间
 }
 
+type ResumeTaskRequest struct {
+	Tid string `json:"tid"` // 任务唯一标识
+}
+
+type RetryTaskRequest struct {
+	Tid string `json:"tid"` // 任务唯一标识
+}
+
 type TagResponse struct {
 	Uid         string `json:"uid"`         // 标签唯一标识
 	Name        string `json:"name"`        // 标签名称
@@ -161,6 +232,53 @@ type TagResponse struct {
 	Icon        string `json:"icon"`        // 标签图标
 	CreatedAt   string `json:"created_at"`  // 创建时间
 	UpdatedAt   string `json:"updated_at"`  // 更新时间
+}
+
+type TaskOperationResponse struct {
+	Result string `json:"result"` // 操作结果
+}
+
+type TaskPlanDetail struct {
+	Pid       string `json:"pid"`        // 任务计划唯一标识
+	Name      string `json:"name"`       // 任务计划名称
+	Index     int64  `json:"index"`      // 任务计划索引
+	Status    string `json:"status"`     // 任务状态
+	Params    string `json:"params"`     // 任务参数
+	Result    string `json:"result"`     // 任务结果
+	Duration  int64  `json:"duration"`   // 任务耗时
+	Error     string `json:"error"`      // 任务错误
+	CreatedAt string `json:"created_at"` // 创建时间
+	UpdatedAt string `json:"updated_at"` // 更新时间
+}
+
+type TaskResponse struct {
+	Tid          string `json:"tid"`           // 任务唯一标识
+	Name         string `json:"name"`          // 任务名称
+	Types        string `json:"types"`         // 任务类型
+	Status       string `json:"status"`        // 任务状态
+	CurrentState string `json:"current_state"` // 当前状态机
+	TotalSteps   int64  `json:"total_steps"`   // 总步骤
+	CurrentStep  int64  `json:"current_step"`  // 当前步骤
+	Params       string `json:"params"`        // 任务参数
+	Result       string `json:"result"`        // 任务结果
+	Duration     int64  `json:"duration"`      // 任务耗时
+	Error        string `json:"error"`         // 任务错误
+	Extend       string `json:"extend"`        // 扩展字段
+	CreatedAt    string `json:"created_at"`    // 创建时间
+	UpdatedAt    string `json:"updated_at"`    // 更新时间
+}
+
+type TaskVisualizationResponse struct {
+	Tid          string           `json:"tid"`           // 任务唯一标识
+	Name         string           `json:"name"`          // 任务名称
+	Types        string           `json:"types"`         // 任务类型
+	Status       string           `json:"status"`        // 任务状态
+	CurrentState string           `json:"current_state"` // 当前状态机
+	TotalSteps   int64            `json:"total_steps"`   // 总步骤
+	CurrentStep  int64            `json:"current_step"`  // 当前步骤
+	Plans        []TaskPlanDetail `json:"plans"`         // 任务计划详情
+	CreatedAt    string           `json:"created_at"`    // 创建时间
+	UpdatedAt    string           `json:"updated_at"`    // 更新时间
 }
 
 type URLRequest struct {
@@ -211,4 +329,33 @@ type UpdateTagResponse struct {
 	Icon        string `json:"icon"`        // 标签图标
 	CreatedAt   string `json:"created_at"`  // 创建时间
 	UpdatedAt   string `json:"updated_at"`  // 更新时间
+}
+
+type UpdateTaskRequest struct {
+	Tid          string `json:"tid"`                    // 任务唯一标识
+	Name         string `json:"name,optional"`          // 任务名称
+	Status       string `json:"status,optional"`        // 任务状态
+	CurrentState string `json:"current_state,optional"` // 当前状态机
+	CurrentStep  int64  `json:"current_step,optional"`  // 当前步骤
+	Result       string `json:"result,optional"`        // 任务结果
+	Error        string `json:"error,optional"`         // 任务错误
+	Extend       string `json:"extend,optional"`        // 扩展字段
+}
+
+type UpdateTaskResponse struct {
+	Id           int64  `json:"id"`            // 主键ID
+	Tid          string `json:"tid"`           // 任务唯一标识
+	Name         string `json:"name"`          // 任务名称
+	Types        string `json:"types"`         // 任务类型
+	Status       string `json:"status"`        // 任务状态
+	CurrentState string `json:"current_state"` // 当前状态机
+	TotalSteps   int64  `json:"total_steps"`   // 总步骤
+	CurrentStep  int64  `json:"current_step"`  // 当前步骤
+	Params       string `json:"params"`        // 任务参数
+	Result       string `json:"result"`        // 任务结果
+	Duration     int64  `json:"duration"`      // 任务耗时
+	Error        string `json:"error"`         // 任务错误
+	Extend       string `json:"extend"`        // 扩展字段
+	CreatedAt    string `json:"created_at"`    // 创建时间
+	UpdatedAt    string `json:"updated_at"`    // 更新时间
 }

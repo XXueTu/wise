@@ -1,0 +1,196 @@
+syntax = "v1"
+
+type CreateTaskRequest {
+	Name         string `json:"name"`          // 任务名称
+	Types        string `json:"types"`         // 任务类型
+	Params       string `json:"params"`        // 任务参数
+	TotalSteps   int64  `json:"total_steps"`   // 总步骤
+	CurrentState string `json:"current_state"` // 当前状态机
+}
+
+type CreateTaskResponse {
+	Id           int64  `json:"id"`            // 主键ID
+	Tid          string `json:"tid"`           // 任务唯一标识
+	Name         string `json:"name"`          // 任务名称
+	Types        string `json:"types"`         // 任务类型
+	Status       string `json:"status"`        // 任务状态
+	CurrentState string `json:"current_state"` // 当前状态机
+	TotalSteps   int64  `json:"total_steps"`   // 总步骤
+	CurrentStep  int64  `json:"current_step"`  // 当前步骤
+	Params       string `json:"params"`        // 任务参数
+	Result       string `json:"result"`        // 任务结果
+	Duration     int64  `json:"duration"`      // 任务耗时
+	Error        string `json:"error"`         // 任务错误
+	Extend       string `json:"extend"`        // 扩展字段
+	CreatedAt    string `json:"created_at"`    // 创建时间
+	UpdatedAt    string `json:"updated_at"`    // 更新时间
+}
+
+type UpdateTaskRequest {
+	Tid          string `json:"tid"`           // 任务唯一标识
+	Name         string `json:"name,optional"` // 任务名称
+	Status       string `json:"status,optional"` // 任务状态
+	CurrentState string `json:"current_state,optional"` // 当前状态机
+	CurrentStep  int64  `json:"current_step,optional"`  // 当前步骤
+	Result       string `json:"result,optional"` // 任务结果
+	Error        string `json:"error,optional"`  // 任务错误
+	Extend       string `json:"extend,optional"` // 扩展字段
+}
+
+type UpdateTaskResponse {
+	Id           int64  `json:"id"`            // 主键ID
+	Tid          string `json:"tid"`           // 任务唯一标识
+	Name         string `json:"name"`          // 任务名称
+	Types        string `json:"types"`         // 任务类型
+	Status       string `json:"status"`        // 任务状态
+	CurrentState string `json:"current_state"` // 当前状态机
+	TotalSteps   int64  `json:"total_steps"`   // 总步骤
+	CurrentStep  int64  `json:"current_step"`  // 当前步骤
+	Params       string `json:"params"`        // 任务参数
+	Result       string `json:"result"`        // 任务结果
+	Duration     int64  `json:"duration"`      // 任务耗时
+	Error        string `json:"error"`         // 任务错误
+	Extend       string `json:"extend"`        // 扩展字段
+	CreatedAt    string `json:"created_at"`    // 创建时间
+	UpdatedAt    string `json:"updated_at"`    // 更新时间
+}
+
+type GetTaskRequest {
+	Tid string `json:"tid"` // 任务唯一标识
+}
+
+type DeleteTaskRequest {
+	Tid string `json:"tid"` // 任务唯一标识
+}
+
+type DeleteTaskResponse {
+	Result string `json:"result"` // 结果
+}
+
+type ListTaskRequest {
+	Page     int64  `form:"page,default=1"`       // 页码
+	PageSize int64  `form:"page_size,default=10"` // 每页数量
+	Name     string `form:"name,optional"`        // 任务名称（模糊查询）
+	Types    string `form:"types,optional"`       // 任务类型
+	Status   string `form:"status,optional"`      // 任务状态
+}
+
+type ListTaskResponse {
+	Total int64            `json:"total"` // 总数
+	List  []TaskResponse   `json:"list"`  // 任务列表
+}
+
+type TaskResponse {
+	Tid          string `json:"tid"`           // 任务唯一标识
+	Name         string `json:"name"`          // 任务名称
+	Types        string `json:"types"`         // 任务类型
+	Status       string `json:"status"`        // 任务状态
+	CurrentState string `json:"current_state"` // 当前状态机
+	TotalSteps   int64  `json:"total_steps"`   // 总步骤
+	CurrentStep  int64  `json:"current_step"`  // 当前步骤
+	Params       string `json:"params"`        // 任务参数
+	Result       string `json:"result"`        // 任务结果
+	Duration     int64  `json:"duration"`      // 任务耗时
+	Error        string `json:"error"`         // 任务错误
+	Extend       string `json:"extend"`        // 扩展字段
+	CreatedAt    string `json:"created_at"`    // 创建时间
+	UpdatedAt    string `json:"updated_at"`    // 更新时间
+}
+
+// 任务操作相关接口
+type RetryTaskRequest {
+	Tid string `json:"tid"` // 任务唯一标识
+}
+
+type PauseTaskRequest {
+	Tid string `json:"tid"` // 任务唯一标识
+}
+
+type ResumeTaskRequest {
+	Tid string `json:"tid"` // 任务唯一标识
+}
+
+type CancelTaskRequest {
+	Tid string `json:"tid"` // 任务唯一标识
+}
+
+type TaskOperationResponse {
+	Result string `json:"result"` // 操作结果
+}
+
+// 任务可视化相关接口
+type GetTaskVisualizationRequest {
+	Tid string `json:"tid"` // 任务唯一标识
+}
+
+type TaskVisualizationResponse {
+	Tid          string           `json:"tid"`           // 任务唯一标识
+	Name         string           `json:"name"`          // 任务名称
+	Types        string           `json:"types"`         // 任务类型
+	Status       string           `json:"status"`        // 任务状态
+	CurrentState string           `json:"current_state"` // 当前状态机
+	TotalSteps   int64            `json:"total_steps"`   // 总步骤
+	CurrentStep  int64            `json:"current_step"`  // 当前步骤
+	Plans        []TaskPlanDetail `json:"plans"`         // 任务计划详情
+	CreatedAt    string           `json:"created_at"`    // 创建时间
+	UpdatedAt    string           `json:"updated_at"`    // 更新时间
+}
+
+type TaskPlanDetail {
+	Pid       string `json:"pid"`       // 任务计划唯一标识
+	Name      string `json:"name"`      // 任务计划名称
+	Index     int64  `json:"index"`     // 任务计划索引
+	Status    string `json:"status"`    // 任务状态
+	Params    string `json:"params"`    // 任务参数
+	Result    string `json:"result"`    // 任务结果
+	Duration  int64  `json:"duration"`  // 任务耗时
+	Error     string `json:"error"`     // 任务错误
+	CreatedAt string `json:"created_at"` // 创建时间
+	UpdatedAt string `json:"updated_at"` // 更新时间
+}
+
+@server (
+	group: tasks
+	prefix: /wise
+)
+service wise-api {
+	@doc "创建任务"
+	@handler CreateTaskHandler
+	post /api/task (CreateTaskRequest) returns (CreateTaskResponse)
+
+	@doc "更新任务"
+	@handler UpdateTaskHandler
+	put /api/task (UpdateTaskRequest) returns (UpdateTaskResponse)
+
+	@doc "删除任务"
+	@handler DeleteTaskHandler
+	delete /api/task (DeleteTaskRequest) returns (DeleteTaskResponse)
+
+	@doc "获取任务详情"
+	@handler GetTaskHandler
+	get /api/task (GetTaskRequest) returns (TaskResponse)
+
+	@doc "获取任务列表"
+	@handler ListTaskHandler
+	get /api/tasks (ListTaskRequest) returns (ListTaskResponse)
+
+	@doc "重试任务"
+	@handler RetryTaskHandler
+	post /api/task/retry (RetryTaskRequest) returns (TaskOperationResponse)
+
+	@doc "暂停任务"
+	@handler PauseTaskHandler
+	post /api/task/pause (PauseTaskRequest) returns (TaskOperationResponse)
+
+	@doc "恢复任务"
+	@handler ResumeTaskHandler
+	post /api/task/resume (ResumeTaskRequest) returns (TaskOperationResponse)
+
+	@doc "取消任务"
+	@handler CancelTaskHandler
+	post /api/task/cancel (CancelTaskRequest) returns (TaskOperationResponse)
+
+	@doc "获取任务可视化信息"
+	@handler GetTaskVisualizationHandler
+	get /api/task/visualization (GetTaskVisualizationRequest) returns (TaskVisualizationResponse)
+}

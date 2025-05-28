@@ -10,6 +10,7 @@ import (
 	models "github.com/XXueTu/wise/internal/handler/models"
 	resources "github.com/XXueTu/wise/internal/handler/resources"
 	tags "github.com/XXueTu/wise/internal/handler/tags"
+	tasks "github.com/XXueTu/wise/internal/handler/tasks"
 	"github.com/XXueTu/wise/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -149,6 +150,72 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodGet,
 				Path:    "/api/tags",
 				Handler: tags.ListTagHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/wise"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				// 创建任务
+				Method:  http.MethodPost,
+				Path:    "/api/task",
+				Handler: tasks.CreateTaskHandler(serverCtx),
+			},
+			{
+				// 更新任务
+				Method:  http.MethodPut,
+				Path:    "/api/task",
+				Handler: tasks.UpdateTaskHandler(serverCtx),
+			},
+			{
+				// 删除任务
+				Method:  http.MethodDelete,
+				Path:    "/api/task",
+				Handler: tasks.DeleteTaskHandler(serverCtx),
+			},
+			{
+				// 获取任务详情
+				Method:  http.MethodGet,
+				Path:    "/api/task",
+				Handler: tasks.GetTaskHandler(serverCtx),
+			},
+			{
+				// 取消任务
+				Method:  http.MethodPost,
+				Path:    "/api/task/cancel",
+				Handler: tasks.CancelTaskHandler(serverCtx),
+			},
+			{
+				// 暂停任务
+				Method:  http.MethodPost,
+				Path:    "/api/task/pause",
+				Handler: tasks.PauseTaskHandler(serverCtx),
+			},
+			{
+				// 恢复任务
+				Method:  http.MethodPost,
+				Path:    "/api/task/resume",
+				Handler: tasks.ResumeTaskHandler(serverCtx),
+			},
+			{
+				// 重试任务
+				Method:  http.MethodPost,
+				Path:    "/api/task/retry",
+				Handler: tasks.RetryTaskHandler(serverCtx),
+			},
+			{
+				// 获取任务可视化信息
+				Method:  http.MethodGet,
+				Path:    "/api/task/visualization",
+				Handler: tasks.GetTaskVisualizationHandler(serverCtx),
+			},
+			{
+				// 获取任务列表
+				Method:  http.MethodGet,
+				Path:    "/api/tasks",
+				Handler: tasks.ListTaskHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/wise"),

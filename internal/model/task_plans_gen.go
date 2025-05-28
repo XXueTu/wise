@@ -7,7 +7,7 @@ import (
 	"github.com/uptrace/bun"
 )
 
-// Task 任务
+// TaskPlans 任务计划
 type TaskPlans struct {
 	bun.BaseModel `bun:"table:task_plans,alias:p"`
 

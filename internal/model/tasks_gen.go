@@ -7,7 +7,7 @@ import (
 	"github.com/uptrace/bun"
 )
 
-// Task 任务
+// Tasks 任务
 type Tasks struct {
 	bun.BaseModel `bun:"table:tasks,alias:t"`
 	ID            int64     `bun:"id,pk,autoincrement" json:"id"`
@@ -37,6 +37,7 @@ type TasksGen interface {
 	GetByTid(ctx context.Context, tid string) (*Tasks, error)
 	GetStatus(ctx context.Context, status string) ([]*Tasks, error)
 	GetStatusLimit(ctx context.Context, status string, limit int) ([]*Tasks, error)
+	GetPage(ctx context.Context, page int64, pageSize int64, name string, status string, types string) (*TasksList, error)
 	UpdateState(ctx context.Context, tid string, state string, result string) error
 	UpdateStatus(ctx context.Context, tid string, status string, error string) error
 }

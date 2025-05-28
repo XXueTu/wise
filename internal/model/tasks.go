@@ -85,6 +85,52 @@ func (m *TasksModel) GetByTid(ctx context.Context, tid string) (*Tasks, error) {
 	return &task, err
 }
 
+// TagsList 标签列表返回结构
+type TasksList struct {
+	Total int64    `json:"total"` // 总记录数
+	List  []*Tasks `json:"list"`  // 标签列表
+}
+
+func (m *TasksModel) GetPage(ctx context.Context, page int64, pageSize int64, name string, status string, types string) (*TasksList, error) {
+	// 构建查询
+	query := m.db.NewSelect().Model((*Tasks)(nil))
+
+	// 添加条件
+	if name != "" {
+		query = query.Where("name LIKE ?", "%"+name+"%")
+	}
+	if status != "" {
+		query = query.Where("status = ?", status)
+	}
+	if types != "" {
+		query = query.Where("types = ?", types)
+	}
+
+	// 获取总记录数
+	total, err := query.Count(ctx)
+	if err != nil {
+		logx.Error("GetPage total error", err)
+		return nil, err
+	}
+
+	// 分页查询
+	var tasks []*Tasks
+	err = query.
+		Order("created_at DESC").
+		Offset(int((page-1)*pageSize)).
+		Limit(int(pageSize)).
+		Scan(ctx, &tasks)
+	if err != nil {
+		logx.Error("GetPage scan error", err)
+		return nil, err
+	}
+
+	return &TasksList{
+		Total: int64(total),
+		List:  tasks,
+	}, nil
+}
+
 // UpdateState 更新任务状态
 func (m *TasksModel) UpdateState(ctx context.Context, tid string, state string, result string) error {
 	task, err := m.GetByTid(ctx, tid)
