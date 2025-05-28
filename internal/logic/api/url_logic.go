@@ -51,7 +51,7 @@ func (l *UrlLogic) Url(req *types.URLRequest) (resp *types.URLResponse, err erro
 	resp.Tag = []string{"微信公众号"}
 	logx.Info("url response:", resp)
 
-	err = task.CreateUrlMarkTask(l.ctx, task.UrlMarkTaskArgs{
+	err = task.CreateUrlMarkTask(l.ctx, l.svcCtx, task.UrlMarkTaskArgs{
 		Url: req.URL,
 	})
 	if err != nil {

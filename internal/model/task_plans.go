@@ -81,3 +81,9 @@ func (m *TaskPlansModel) GetInitByTid(ctx context.Context, tid string) ([]*TaskP
 	err := m.db.NewSelect().Model(&taskPlans).Where("tid = ?", tid).Where("status = ?", TaskPlanStatusInit).Scan(ctx)
 	return taskPlans, err
 }
+
+func (m *TaskPlansModel) GetByTid(ctx context.Context, tid string) ([]*TaskPlans, error) {
+	var taskPlans []*TaskPlans
+	err := m.db.NewSelect().Model(&taskPlans).Where("tid = ?", tid).Scan(ctx)
+	return taskPlans, err
+}

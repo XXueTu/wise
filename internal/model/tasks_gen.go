@@ -37,7 +37,8 @@ type TasksGen interface {
 	GetByTid(ctx context.Context, tid string) (*Tasks, error)
 	GetStatus(ctx context.Context, status string) ([]*Tasks, error)
 	GetStatusLimit(ctx context.Context, status string, limit int) ([]*Tasks, error)
-	UpdateState(ctx context.Context, tid string, state string, result string, err error) error
+	UpdateState(ctx context.Context, tid string, state string, result string) error
+	UpdateStatus(ctx context.Context, tid string, status string, error string) error
 }
 
 const (

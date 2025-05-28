@@ -35,6 +35,7 @@ type TaskPlansGen interface {
 	Delete(ctx context.Context, id int64) error
 	Get(ctx context.Context, id int64) (*TaskPlans, error)
 	GetInitByTid(ctx context.Context, tid string) ([]*TaskPlans, error)
+	GetByTid(ctx context.Context, tid string) ([]*TaskPlans, error)
 }
 
 const (

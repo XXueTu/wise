@@ -86,17 +86,23 @@ func (m *TasksModel) GetByTid(ctx context.Context, tid string) (*Tasks, error) {
 }
 
 // UpdateState 更新任务状态
-func (m *TasksModel) UpdateState(ctx context.Context, tid string, state string, result string, err error) error {
+func (m *TasksModel) UpdateState(ctx context.Context, tid string, state string, result string) error {
 	task, err := m.GetByTid(ctx, tid)
 	if err != nil {
 		return err
 	}
-
 	task.CurrentState = state
 	task.Result = result
-	if err != nil {
-		task.Error = err.Error()
-	}
+	return m.Update(ctx, task)
+}
 
+// UpdateState 更新任务状态
+func (m *TasksModel) UpdateStatus(ctx context.Context, tid string, status string, error string) error {
+	task, err := m.GetByTid(ctx, tid)
+	if err != nil {
+		return err
+	}
+	task.Status = status
+	task.Error = error
 	return m.Update(ctx, task)
 }

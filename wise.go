@@ -44,8 +44,10 @@ func main() {
 
 	ctx := svc.NewServiceContext(c)
 	handler.RegisterHandlers(server, ctx)
-	// 启动任务执行器
-	task.NewTaskActuator(ctx).Start()
+
+	// 初始化任务调度器
+	task.InitScheduler(ctx)
+
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
 	server.Start()
 }
