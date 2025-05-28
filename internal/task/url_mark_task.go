@@ -2,7 +2,6 @@ package task
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -184,7 +183,7 @@ func (t *UrlMarkTask) Split(ctx context.Context, args UrlMarkTaskArgs) (UrlMarkT
 	logx.Info("url mark task split")
 	// TODO: 实现内容拆分逻辑
 	args.PCode = UrlMarkStates.Mark.Code
-	return args, t.Mark, errors.New("Mark ERROR")
+	return args, t.Mark, nil
 }
 
 // Mark 标记状态

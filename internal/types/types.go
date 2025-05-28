@@ -137,6 +137,14 @@ type GetTaskVisualizationRequest struct {
 	Tid string `form:"tid"` // 任务唯一标识
 }
 
+type IdentifyResourceRequest struct {
+	URL string `json:"url"` // URL链接,多个逗号分隔
+}
+
+type IdentifyResourceResponse struct {
+	Urls []string `json:"urls"` // 任务ID列表
+}
+
 type ListModelRequest struct {
 	Page     int64    `json:"page"`             // 页码
 	PageSize int64    `json:"page_size"`        // 每页数量

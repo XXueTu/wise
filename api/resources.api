@@ -20,6 +20,14 @@ type CreateResourceRequest {
 	TagUids []string `json:"tag_uids"` // 标签ID
 }
 
+type IdentifyResourceRequest {
+	URL string `json:"url"` // URL链接,多个逗号分隔
+}
+
+type IdentifyResourceResponse {
+	Urls []string `json:"urls"` // 任务ID列表
+}
+
 type CreateAiResourceRequest {
 	URL string `json:"url"` // URL链接
 }
@@ -62,6 +70,10 @@ service wise-api {
 	@doc "创建资源"
 	@handler CreateResourceHandler
 	post /api/resources (CreateResourceRequest) returns (Resource)
+
+	@doc "AI识别资源"
+	@handler IdentifyResourceHandler
+	post /api/resources/identify (IdentifyResourceRequest) returns (IdentifyResourceResponse)
 
 	@doc "创建AI资源"
 	@handler CreateAiResourceHandler

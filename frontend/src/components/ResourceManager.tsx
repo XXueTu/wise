@@ -27,7 +27,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Resource, resourceService } from "@/services/resourceService"
-import { Check, ChevronDown, Copy, ExternalLink, FileText, Globe, Tag } from "lucide-react"
+import { Check, ChevronDown, Copy, ExternalLink, FileText, Globe, Sparkles, Tag } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 // Tooltip 组件
@@ -242,6 +242,10 @@ export function ResourceManager() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingResource, setEditingResource] = useState<Resource | null>(null)
   const [selectedTagUids, setSelectedTagUids] = useState<string[]>([])
+  const [isIdentifyDialogOpen, setIsIdentifyDialogOpen] = useState(false)
+  const [identifyUrl, setIdentifyUrl] = useState("")
+  const [isIdentifying, setIsIdentifying] = useState(false)
+  const [identifiedUrls, setIdentifiedUrls] = useState<string[]>([])
 
   const loadData = async () => {
     try {
@@ -323,6 +327,29 @@ export function ResourceManager() {
     }
   }
 
+  const handleIdentify = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!identifyUrl.trim()) return
+
+    setIsIdentifying(true)
+    setIdentifiedUrls([])
+    try {
+      const response = await resourceService.identifyResource({ url: identifyUrl })
+      setIdentifiedUrls(response.urls)
+      loadData()
+    } catch (error) {
+      console.error("识别资源失败:", error)
+    } finally {
+      setIsIdentifying(false)
+    }
+  }
+
+  const handleCloseIdentifyDialog = () => {
+    setIsIdentifyDialogOpen(false)
+    setIdentifyUrl("")
+    setIdentifiedUrls([])
+  }
+
   return (
     <div className="container mx-auto py-6">
       <div className="flex justify-between items-center mb-6">
@@ -352,7 +379,17 @@ export function ResourceManager() {
             重置
           </Button>
         </div>
-        <Button onClick={handleAdd}>添加资源</Button>
+        <div className="flex gap-2">
+          <Button 
+            variant="default" 
+            onClick={() => setIsIdentifyDialogOpen(true)}
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
+          >
+            <Sparkles className="h-4 w-4" />
+            资源识别
+          </Button>
+          <Button onClick={handleAdd}>添加资源</Button>
+        </div>
       </div>
 
       <div className="rounded-lg border bg-white shadow-sm">
@@ -543,6 +580,73 @@ export function ResourceManager() {
               <Button type="submit">保存</Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isIdentifyDialogOpen} onOpenChange={handleCloseIdentifyDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>资源识别</DialogTitle>
+            <DialogDescription>
+              请输入需要识别的URL，多个URL请用逗号分隔
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleIdentify}>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <label htmlFor="identify-url" className="text-sm font-medium">URL</label>
+                <textarea
+                  id="identify-url"
+                  value={identifyUrl}
+                  onChange={(e) => setIdentifyUrl(e.target.value)}
+                  placeholder="请输入URL，多个URL用逗号分隔"
+                  required
+                  className="min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type="submit" disabled={isIdentifying} className="bg-blue-600 hover:bg-blue-700">
+                {isIdentifying ? "识别中..." : "开始识别"}
+              </Button>
+            </DialogFooter>
+          </form>
+
+          {identifiedUrls.length > 0 && (
+            <div className="mt-4 border-t pt-4">
+              <h4 className="text-sm font-medium mb-2">识别结果</h4>
+              <div className="bg-gray-50 rounded-lg p-4 max-h-[200px] overflow-y-auto">
+                <div className="space-y-2">
+                  {identifiedUrls.map((url, index) => (
+                    <div 
+                      key={index}
+                      className="flex items-center gap-2 p-2 bg-white rounded border hover:bg-gray-50"
+                    >
+                      <Globe className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                      <a 
+                        href={url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-sm text-blue-600 hover:text-blue-800 hover:underline truncate"
+                      >
+                        {url}
+                      </a>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 px-2 ml-auto flex-shrink-0"
+                        onClick={() => {
+                          navigator.clipboard.writeText(url)
+                        }}
+                      >
+                        <Copy className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>

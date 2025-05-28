@@ -369,7 +369,7 @@ export function TaskManager() {
         <TableBody>
           {tasks && tasks.length > 0 ? (
             tasks.map((task) => (
-              <TableRow key={task.tid}>
+              <TableRow key={`${task.tid}-${task.created_at}`}>
                 <TableCell>{task.tid}</TableCell>
                 <TableCell>{task.name}</TableCell>
                 <TableCell>{task.types}</TableCell>

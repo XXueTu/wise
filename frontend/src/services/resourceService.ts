@@ -42,6 +42,14 @@ export interface UpdateResourceRequest {
   tag_uids: string[]  // 标签ID列表
 }
 
+export interface IdentifyResourceRequest {
+  url: string
+}
+
+export interface IdentifyResourceResponse {
+  urls: string[]
+}
+
 export const resourceService = {
   // 获取资源列表
   getResources: async (query: ResourceQuery): Promise<ResourceResponse> => {
@@ -66,5 +74,10 @@ export const resourceService = {
   // 获取单个资源
   getResource: async (id: number): Promise<Resource> => {
     return api.get(`/resources?id=${id}`)
+  },
+
+  // 识别资源
+  identifyResource: async (data: IdentifyResourceRequest): Promise<IdentifyResourceResponse> => {
+    return api.post('/resources/identify', data)
   }
 } 

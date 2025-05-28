@@ -104,6 +104,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: resources.GetResourceHandler(serverCtx),
 			},
 			{
+				// AI识别资源
+				Method:  http.MethodPost,
+				Path:    "/api/resources/identify",
+				Handler: resources.IdentifyResourceHandler(serverCtx),
+			},
+			{
 				// 分页查询资源列表
 				Method:  http.MethodPost,
 				Path:    "/api/resources/list",
