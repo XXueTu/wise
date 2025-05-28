@@ -1,37 +1,37 @@
 import { Button } from "@/components/ui/button"
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-  PaginationTotal,
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+    PaginationTotal,
 } from "@/components/ui/pagination"
 import { Progress } from "@/components/ui/progress"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select"
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from "@/components/ui/table"
 import { Task, TaskPlanDetail, TaskVisualization, taskService } from "@/services/taskService"
 import { Check, Copy } from "lucide-react"
@@ -639,7 +639,9 @@ export function TaskManager() {
                     {visualizationData.plans.map((plan) => (
                       <div
                         key={plan.pid}
-                        className={`cursor-pointer p-4 rounded-lg transition-colors ${
+                        className={`cursor-pointer p-4 rounded-lg transition-all ${
+                          selectedPlan?.pid === plan.pid ? 'ring-2 ring-blue-500 shadow-lg scale-[1.02]' : ''
+                        } ${
                           plan.status === 'completed' ? 'bg-green-50 hover:bg-green-100' :
                           plan.status === 'failed' ? 'bg-red-50 hover:bg-red-100' :
                           plan.status === 'running' ? 'bg-blue-50 hover:bg-blue-100' :

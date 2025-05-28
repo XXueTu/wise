@@ -13,3 +13,593 @@ SELECT          55µs SELECT EXISTS (SELECT m.id, m.base_url, m.config, m.type, 
 2025-05-28T19:25:32.994+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:25:32.994
 SELECT          29µs SELECT EXISTS (SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid = 'default'))	caller=model/sqlite.go:42
 2025-05-28T19:25:38.492+08:00	[34;1m info [0;22m	Got signal 2, shutting down...	caller=proc/shutdown.go:84
+2025-05-28T19:33:47.407+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:33:47.407
+CREATE TABLE     1.035ms CREATE TABLE IF NOT EXISTS resources (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, url VARCHAR NOT NULL, title VARCHAR NOT NULL, content VARCHAR NOT NULL, type VARCHAR NOT NULL, tags VARCHAR NOT NULL, created_at TIMESTAMP NOT NULL DEFAULT current_timestamp, updated_at TIMESTAMP NOT NULL DEFAULT current_timestamp)	caller=model/sqlite.go:42
+2025-05-28T19:33:47.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:33:47.408
+CREATE TABLE       21µs CREATE TABLE IF NOT EXISTS models (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, base_url VARCHAR NOT NULL, config VARCHAR NOT NULL, type VARCHAR NOT NULL, model_name VARCHAR NOT NULL, model_real_name VARCHAR NOT NULL, status VARCHAR NOT NULL, tag VARCHAR NOT NULL, created_at TIMESTAMP NOT NULL DEFAULT current_timestamp, updated_at TIMESTAMP NOT NULL DEFAULT current_timestamp)	caller=model/sqlite.go:42
+2025-05-28T19:33:47.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:33:47.408
+CREATE TABLE       15µs CREATE TABLE IF NOT EXISTS tags (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, uid VARCHAR NOT NULL, name VARCHAR NOT NULL, description VARCHAR NOT NULL, color VARCHAR NOT NULL, icon VARCHAR NOT NULL, created_at TIMESTAMP NOT NULL DEFAULT current_timestamp, updated_at TIMESTAMP NOT NULL DEFAULT current_timestamp)	caller=model/sqlite.go:42
+2025-05-28T19:33:47.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:33:47.408
+CREATE TABLE       23µs CREATE TABLE IF NOT EXISTS tasks (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, tid VARCHAR NOT NULL, name VARCHAR NOT NULL, types VARCHAR NOT NULL, status VARCHAR NOT NULL, current_state VARCHAR NOT NULL, total_steps INTEGER NOT NULL, current_step INTEGER NOT NULL, retry_count INTEGER NOT NULL, params VARCHAR NOT NULL, result VARCHAR NOT NULL, duration INTEGER NOT NULL, error VARCHAR NOT NULL, extend VARCHAR NOT NULL, created_at TIMESTAMP NOT NULL DEFAULT current_timestamp, updated_at TIMESTAMP NOT NULL DEFAULT current_timestamp)	caller=model/sqlite.go:42
+2025-05-28T19:33:47.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:33:47.408
+CREATE TABLE       19µs CREATE TABLE IF NOT EXISTS task_plans (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, tid VARCHAR NOT NULL, pid VARCHAR NOT NULL, types VARCHAR NOT NULL, name VARCHAR NOT NULL, index INTEGER NOT NULL, status VARCHAR NOT NULL, params VARCHAR NOT NULL, result VARCHAR NOT NULL, duration INTEGER NOT NULL, error VARCHAR NOT NULL, created_at TIMESTAMP NOT NULL DEFAULT current_timestamp, updated_at TIMESTAMP NOT NULL DEFAULT current_timestamp)	caller=model/sqlite.go:42
+2025-05-28T19:33:47.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:33:47.408
+SELECT          64µs SELECT EXISTS (SELECT m.id, m.base_url, m.config, m.type, m.model_name, m.model_real_name, m.status, m.tag, m.created_at, m.updated_at FROM models AS m WHERE (base_url = 'https://ark.cn-beijing.volces.com/api/v3') AND (model_name = '豆包1.5') AND (model_real_name = 'doubao-1-5-pro-32k-250115'))	caller=model/sqlite.go:42
+2025-05-28T19:33:47.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:33:47.408
+SELECT          26µs SELECT EXISTS (SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid = 'default'))	caller=model/sqlite.go:42
+2025-05-28T19:33:57.411+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:33:57.410
+SELECT        1.342ms SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'init') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:33:57.411+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:33:57.411
+SELECT         110µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'retry') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:34:07.409+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:07.409
+SELECT         657µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'init') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:34:07.410+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:07.410
+SELECT         857µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'retry') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:34:17.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:17.408
+SELECT         282µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'init') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:34:17.409+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:17.409
+SELECT         187µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'retry') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:34:27.409+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:27.408
+SELECT         447µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'init') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:34:27.409+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:27.409
+SELECT         138µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'retry') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:34:28.194+08:00	[34;1m info [0;22m	ListResourceLogic: &{Page:1 PageSize:10 Type: TagUids:[] Keyword:}	caller=resources/list_resource_logic.go:31
+2025-05-28T19:34:28.194+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:28.194
+SELECT         239µs SELECT count(*) FROM tags AS t	caller=model/sqlite.go:42
+2025-05-28T19:34:28.195+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:28.194
+SELECT         352µs SELECT count(*) FROM resources AS r	caller=model/sqlite.go:42
+2025-05-28T19:34:28.195+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:28.195
+SELECT         562µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t ORDER BY created_at DESC LIMIT 1000	caller=model/sqlite.go:42
+2025-05-28T19:34:28.197+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:28.197
+SELECT        2.438ms SELECT r.id, r.url, r.title, r.content, r.type, r.tags, r.created_at, r.updated_at FROM resources AS r ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:34:28.197+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [44;97;1m GET [0;0;22m /wise/api/tags?page=1&page_size=1000 - 127.0.0.1:50671 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=2.0ms	caller=handler/loghandler.go:147	trace=d8c7d504a70ebf8333c844760ec609d7	span=7172242468c5930e
+2025-05-28T19:34:28.198+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:28.198
+SELECT         381µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:28.198+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:28.198
+SELECT          77µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:28.198+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:28.198
+SELECT          66µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:28.198+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:28.198
+SELECT          63µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:28.198+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:28.198
+SELECT          63µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:28.198+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:28.198
+SELECT          66µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:28.198+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:28.198
+SELECT          68µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:28.198+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:28.198
+SELECT          62µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:28.199+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:28.198
+SELECT          66µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:28.199+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:28.199
+SELECT          91µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:28.199+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/resources/list - 127.0.0.1:50672 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	caller=handler/loghandler.go:147	trace=9a741eb5133d585c9f23555a3d8babb8	span=845390f0a4e2cbb5	duration=5.7ms
+2025-05-28T19:34:31.718+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:31.717
+SELECT         380µs SELECT count(*) FROM models AS m	caller=model/sqlite.go:42
+2025-05-28T19:34:31.718+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:31.718
+SELECT         484µs SELECT m.id, m.base_url, m.config, m.type, m.model_name, m.model_real_name, m.status, m.tag, m.created_at, m.updated_at FROM models AS m ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:34:31.719+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/models/list - 127.0.0.1:50672 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	trace=c4ecf342f07bc2786c5a2c829da1a3de	span=8c137bf148611668	duration=1.8ms	caller=handler/loghandler.go:147
+2025-05-28T19:34:32.315+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:32.315
+SELECT        3.117ms SELECT count(*) FROM tasks AS t	caller=model/sqlite.go:42
+2025-05-28T19:34:32.320+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:32.320
+SELECT        4.263ms SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:34:32.320+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [44;97;1m GET [0;0;22m /wise/api/tasks?page=1&page_size=10 - 127.0.0.1:50672 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=8.0ms	caller=handler/loghandler.go:147	trace=280d3b38d7685437acaaa16d0db24c09	span=1c1cfb6af96d60a8
+2025-05-28T19:34:32.846+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:32.846
+SELECT         340µs SELECT count(*) FROM tags AS t	caller=model/sqlite.go:42
+2025-05-28T19:34:32.847+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:32.847
+SELECT         563µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:34:32.847+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [44;97;1m GET [0;0;22m /wise/api/tags?page=1&page_size=10 - 127.0.0.1:50706 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=1.4ms	caller=handler/loghandler.go:147	trace=1e17e160ce37dd261d0ef4b9dcf88ee1	span=3742c4d8019ee951
+2025-05-28T19:34:33.529+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:33.529
+SELECT         298µs SELECT count(*) FROM models AS m	caller=model/sqlite.go:42
+2025-05-28T19:34:33.530+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:33.530
+SELECT         339µs SELECT m.id, m.base_url, m.config, m.type, m.model_name, m.model_real_name, m.status, m.tag, m.created_at, m.updated_at FROM models AS m ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:34:33.530+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/models/list - 127.0.0.1:50706 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=1.1ms	caller=handler/loghandler.go:147	trace=a4dea7602c5f7754f6068c3f1db1f8fc	span=20c1f0ccae7fd56f
+2025-05-28T19:34:34.112+08:00	[34;1m info [0;22m	ListResourceLogic: &{Page:1 PageSize:10 Type: TagUids:[] Keyword:}	caller=resources/list_resource_logic.go:31
+2025-05-28T19:34:34.113+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:34.113
+SELECT         916µs SELECT count(*) FROM tags AS t	caller=model/sqlite.go:42
+2025-05-28T19:34:34.113+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:34.113
+SELECT         334µs SELECT count(*) FROM resources AS r	caller=model/sqlite.go:42
+2025-05-28T19:34:34.113+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:34.113
+SELECT         529µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t ORDER BY created_at DESC LIMIT 1000	caller=model/sqlite.go:42
+2025-05-28T19:34:34.113+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [44;97;1m GET [0;0;22m /wise/api/tags?page=1&page_size=1000 - 127.0.0.1:50706 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=2.0ms	caller=handler/loghandler.go:147	trace=77a147a614b635fe7236f1a70f0689d5	span=b28bb5ea497e4604
+2025-05-28T19:34:34.115+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:34.115
+SELECT        1.702ms SELECT r.id, r.url, r.title, r.content, r.type, r.tags, r.created_at, r.updated_at FROM resources AS r ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:34:34.115+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:34.115
+SELECT         231µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:34.116+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:34.116
+SELECT         390µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:34.116+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:34.116
+SELECT         306µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:34.116+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:34.116
+SELECT          85µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:34.117+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:34.116
+SELECT          72µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:34.117+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:34.117
+SELECT          62µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:34.117+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:34.117
+SELECT          65µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:34.117+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:34.117
+SELECT          83µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:34.117+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:34.117
+SELECT         192µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:34.117+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:34.117
+SELECT          73µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:34.118+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/resources/list - 127.0.0.1:50714 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=6.6ms	caller=handler/loghandler.go:147	trace=e54a1cd121f3ad44bf93a9a6390a48a4	span=7790c87724e86c4d
+2025-05-28T19:34:34.754+08:00	[34;1m info [0;22m	[HTTP] [45;97;1m 404 [0;0;22m - [44;97;1m GET [0;0;22m /wise/api/stats - 127.0.0.1:50714 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=0.0ms	caller=handler/loghandler.go:147	trace=37c37e0248a0aa7efa2d531cefc815c6	span=c3b98f8532902dc5
+2025-05-28T19:34:35.406+08:00	[34;1m info [0;22m	ListResourceLogic: &{Page:1 PageSize:10 Type: TagUids:[] Keyword:}	caller=resources/list_resource_logic.go:31
+2025-05-28T19:34:35.406+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:35.406
+SELECT         228µs SELECT count(*) FROM tags AS t	caller=model/sqlite.go:42
+2025-05-28T19:34:35.406+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:35.406
+SELECT         241µs SELECT count(*) FROM resources AS r	caller=model/sqlite.go:42
+2025-05-28T19:34:35.407+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:35.407
+SELECT         500µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t ORDER BY created_at DESC LIMIT 1000	caller=model/sqlite.go:42
+2025-05-28T19:34:35.407+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [44;97;1m GET [0;0;22m /wise/api/tags?page=1&page_size=1000 - 127.0.0.1:50714 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	trace=ee42d7d9cae02542efc13cd23a12d07c	span=d1baee5be4d03de5	duration=1.0ms	caller=handler/loghandler.go:147
+2025-05-28T19:34:35.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:35.408
+SELECT        1.491ms SELECT r.id, r.url, r.title, r.content, r.type, r.tags, r.created_at, r.updated_at FROM resources AS r ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:34:35.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:35.408
+SELECT         126µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:35.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:35.408
+SELECT          72µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:35.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:35.408
+SELECT          65µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:35.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:35.408
+SELECT          63µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:35.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:35.408
+SELECT          72µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:35.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:35.408
+SELECT          62µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:35.409+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:35.409
+SELECT          61µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:35.409+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:35.409
+SELECT          62µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:35.409+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:35.409
+SELECT          62µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:35.409+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:35.409
+SELECT          66µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:35.410+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/resources/list - 127.0.0.1:50706 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=3.7ms	caller=handler/loghandler.go:147	trace=23eda31ae251e2b4201e2d617c5895ae	span=3720f1cf3cedeefd
+2025-05-28T19:34:37.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:37.408
+SELECT         624µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'init') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:34:37.409+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:37.409
+SELECT         187µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'retry') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:34:47.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:47.408
+SELECT         148µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'init') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:34:47.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:47.408
+SELECT          38µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'retry') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:34:51.113+08:00	[34;1m info [0;22m	ListResourceLogic: &{Page:1 PageSize:10 Type: TagUids:[] Keyword:}	caller=resources/list_resource_logic.go:31
+2025-05-28T19:34:51.113+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:51.113
+SELECT         308µs SELECT count(*) FROM resources AS r	caller=model/sqlite.go:42
+2025-05-28T19:34:51.115+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:51.115
+SELECT        1.246ms SELECT r.id, r.url, r.title, r.content, r.type, r.tags, r.created_at, r.updated_at FROM resources AS r ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:34:51.115+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:51.115
+SELECT         104µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:51.115+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:51.115
+SELECT          74µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:51.115+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:51.115
+SELECT         100µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:51.115+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:51.115
+SELECT          67µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:51.115+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:51.115
+SELECT          86µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:51.115+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:51.115
+SELECT          76µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:51.116+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:51.115
+SELECT          70µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:51.116+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:51.116
+SELECT          63µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:51.116+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:51.116
+SELECT          62µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:51.116+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:51.116
+SELECT          76µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:51.117+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/resources/list - 127.0.0.1:50826 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	span=5c01713ece58149d	duration=3.9ms	caller=handler/loghandler.go:147	trace=bfee5c26e580cdf725ee653d34681e7f
+2025-05-28T19:34:52.571+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:52.571
+SELECT         252µs SELECT count(*) FROM models AS m	caller=model/sqlite.go:42
+2025-05-28T19:34:52.571+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:52.571
+SELECT         112µs SELECT m.id, m.base_url, m.config, m.type, m.model_name, m.model_real_name, m.status, m.tag, m.created_at, m.updated_at FROM models AS m ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:34:52.571+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/models/list - 127.0.0.1:50852 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=1.2ms	caller=handler/loghandler.go:147	trace=19992b20fdbf6f72c225dad34b69b688	span=c9439372b71338e1
+2025-05-28T19:34:53.309+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:53.308
+SELECT         340µs SELECT count(*) FROM tasks AS t	caller=model/sqlite.go:42
+2025-05-28T19:34:53.309+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:53.309
+SELECT         436µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:34:53.311+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [44;97;1m GET [0;0;22m /wise/api/tasks?page=1&page_size=10 - 127.0.0.1:50852 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=3.2ms	caller=handler/loghandler.go:147	trace=a1d5673c3ecb160434958481d032d655	span=5c91ca6ef7723d67
+2025-05-28T19:34:54.319+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:54.319
+SELECT         257µs SELECT count(*) FROM tags AS t	caller=model/sqlite.go:42
+2025-05-28T19:34:54.319+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:54.319
+SELECT         347µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:34:54.319+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [44;97;1m GET [0;0;22m /wise/api/tags?page=1&page_size=10 - 127.0.0.1:50852 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	span=733fa9eb3dc5b126	duration=1.0ms	caller=handler/loghandler.go:147	trace=e2a9e0b5680c1a838d10be6ed9823101
+2025-05-28T19:34:55.502+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:55.502
+SELECT         610µs SELECT count(*) FROM tags AS t	caller=model/sqlite.go:42
+2025-05-28T19:34:55.503+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:55.503
+SELECT        1.009ms SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t ORDER BY created_at DESC LIMIT 1000	caller=model/sqlite.go:42
+2025-05-28T19:34:55.503+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [44;97;1m GET [0;0;22m /wise/api/tags?page=1&page_size=1000 - 127.0.0.1:50852 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	trace=958aeb6f56ab7de56b76268ac5471025	span=56c30b9f4fc7da97	duration=2.4ms	caller=handler/loghandler.go:147
+2025-05-28T19:34:55.503+08:00	[34;1m info [0;22m	ListResourceLogic: &{Page:1 PageSize:10 Type: TagUids:[] Keyword:}	caller=resources/list_resource_logic.go:31
+2025-05-28T19:34:55.504+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:55.504
+SELECT         530µs SELECT count(*) FROM resources AS r	caller=model/sqlite.go:42
+2025-05-28T19:34:55.507+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:55.507
+SELECT        3.196ms SELECT r.id, r.url, r.title, r.content, r.type, r.tags, r.created_at, r.updated_at FROM resources AS r ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:34:55.508+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:55.508
+SELECT         222µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:55.508+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:55.508
+SELECT          82µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:55.508+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:55.508
+SELECT          64µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:55.508+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:55.508
+SELECT          91µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:55.508+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:55.508
+SELECT         123µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:55.508+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:55.508
+SELECT          70µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:55.508+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:55.508
+SELECT          62µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:55.509+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:55.509
+SELECT         151µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:55.509+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:55.509
+SELECT          75µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:55.509+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:55.509
+SELECT          75µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:55.510+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/resources/list - 127.0.0.1:50874 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	span=f02bc3560df1dd94	duration=6.5ms	caller=handler/loghandler.go:147	trace=dafc3c6e9a483e263eca3059b74d421e
+2025-05-28T19:34:55.936+08:00	[34;1m info [0;22m	[HTTP] [45;97;1m 404 [0;0;22m - [44;97;1m GET [0;0;22m /wise/api/stats - 127.0.0.1:50874 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=0.0ms	caller=handler/loghandler.go:147	trace=3bb4fdf657a07bd506ae4056fa3daaf7	span=013eeb30ede4ba83
+2025-05-28T19:34:56.449+08:00	[34;1m info [0;22m	ListResourceLogic: &{Page:1 PageSize:10 Type: TagUids:[] Keyword:}	caller=resources/list_resource_logic.go:31
+2025-05-28T19:34:56.449+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:56.449
+SELECT         276µs SELECT count(*) FROM tags AS t	caller=model/sqlite.go:42
+2025-05-28T19:34:56.449+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:56.449
+SELECT         392µs SELECT count(*) FROM resources AS r	caller=model/sqlite.go:42
+2025-05-28T19:34:56.450+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:56.450
+SELECT         937µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t ORDER BY created_at DESC LIMIT 1000	caller=model/sqlite.go:42
+2025-05-28T19:34:56.451+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [44;97;1m GET [0;0;22m /wise/api/tags?page=1&page_size=1000 - 127.0.0.1:50874 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	span=84aea8ff9d88b824	duration=2.0ms	caller=handler/loghandler.go:147	trace=3d2a3505a35a9c929c3fd18a0c6cc06e
+2025-05-28T19:34:56.453+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:56.453
+SELECT        3.246ms SELECT r.id, r.url, r.title, r.content, r.type, r.tags, r.created_at, r.updated_at FROM resources AS r ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:34:56.453+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:56.453
+SELECT         451µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:56.454+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:56.454
+SELECT         192µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:56.454+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:56.454
+SELECT          88µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:56.454+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:56.454
+SELECT          84µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:56.454+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:56.454
+SELECT          68µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:56.454+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:56.454
+SELECT         101µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:56.454+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:56.454
+SELECT          85µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:56.454+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:56.454
+SELECT         114µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:56.455+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:56.455
+SELECT          95µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:56.455+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:56.455
+SELECT          76µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:34:56.457+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/resources/list - 127.0.0.1:50852 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=8.0ms	caller=handler/loghandler.go:147	trace=ea25c7aac0c6e7a6687bbed8ea22306a	span=7473b194d0627c49
+2025-05-28T19:34:57.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:57.408
+SELECT         447µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'init') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:34:57.409+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:34:57.408
+SELECT         274µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'retry') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:35:07.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:35:07.408
+SELECT         334µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'init') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:35:07.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:35:07.408
+SELECT          49µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'retry') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:35:17.407+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:35:17.407
+SELECT         218µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'init') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:35:17.407+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:35:17.407
+SELECT          59µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'retry') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:35:27.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:35:27.407
+SELECT         589µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'init') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:35:27.408+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:35:27.408
+SELECT         172µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'retry') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:35:37.407+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:35:37.407
+SELECT         289µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'init') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:35:37.407+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:35:37.407
+SELECT          62µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'retry') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:35:38.869+08:00	[34;1m info [0;22m	Got signal 2, shutting down...	caller=proc/shutdown.go:84
+2025-05-28T19:35:43.963+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:35:43.963
+CREATE TABLE      885µs CREATE TABLE IF NOT EXISTS resources (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, url VARCHAR NOT NULL, title VARCHAR NOT NULL, content VARCHAR NOT NULL, type VARCHAR NOT NULL, tags VARCHAR NOT NULL, created_at TIMESTAMP NOT NULL DEFAULT current_timestamp, updated_at TIMESTAMP NOT NULL DEFAULT current_timestamp)	caller=model/sqlite.go:42
+2025-05-28T19:35:43.963+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:35:43.963
+CREATE TABLE       17µs CREATE TABLE IF NOT EXISTS models (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, base_url VARCHAR NOT NULL, config VARCHAR NOT NULL, type VARCHAR NOT NULL, model_name VARCHAR NOT NULL, model_real_name VARCHAR NOT NULL, status VARCHAR NOT NULL, tag VARCHAR NOT NULL, created_at TIMESTAMP NOT NULL DEFAULT current_timestamp, updated_at TIMESTAMP NOT NULL DEFAULT current_timestamp)	caller=model/sqlite.go:42
+2025-05-28T19:35:43.963+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:35:43.963
+CREATE TABLE       14µs CREATE TABLE IF NOT EXISTS tags (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, uid VARCHAR NOT NULL, name VARCHAR NOT NULL, description VARCHAR NOT NULL, color VARCHAR NOT NULL, icon VARCHAR NOT NULL, created_at TIMESTAMP NOT NULL DEFAULT current_timestamp, updated_at TIMESTAMP NOT NULL DEFAULT current_timestamp)	caller=model/sqlite.go:42
+2025-05-28T19:35:43.963+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:35:43.963
+CREATE TABLE       15µs CREATE TABLE IF NOT EXISTS tasks (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, tid VARCHAR NOT NULL, name VARCHAR NOT NULL, types VARCHAR NOT NULL, status VARCHAR NOT NULL, current_state VARCHAR NOT NULL, total_steps INTEGER NOT NULL, current_step INTEGER NOT NULL, retry_count INTEGER NOT NULL, params VARCHAR NOT NULL, result VARCHAR NOT NULL, duration INTEGER NOT NULL, error VARCHAR NOT NULL, extend VARCHAR NOT NULL, created_at TIMESTAMP NOT NULL DEFAULT current_timestamp, updated_at TIMESTAMP NOT NULL DEFAULT current_timestamp)	caller=model/sqlite.go:42
+2025-05-28T19:35:43.963+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:35:43.963
+CREATE TABLE       14µs CREATE TABLE IF NOT EXISTS task_plans (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, tid VARCHAR NOT NULL, pid VARCHAR NOT NULL, types VARCHAR NOT NULL, name VARCHAR NOT NULL, index INTEGER NOT NULL, status VARCHAR NOT NULL, params VARCHAR NOT NULL, result VARCHAR NOT NULL, duration INTEGER NOT NULL, error VARCHAR NOT NULL, created_at TIMESTAMP NOT NULL DEFAULT current_timestamp, updated_at TIMESTAMP NOT NULL DEFAULT current_timestamp)	caller=model/sqlite.go:42
+2025-05-28T19:35:43.964+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:35:43.964
+SELECT          52µs SELECT EXISTS (SELECT m.id, m.base_url, m.config, m.type, m.model_name, m.model_real_name, m.status, m.tag, m.created_at, m.updated_at FROM models AS m WHERE (base_url = 'https://ark.cn-beijing.volces.com/api/v3') AND (model_name = '豆包1.5') AND (model_real_name = 'doubao-1-5-pro-32k-250115'))	caller=model/sqlite.go:42
+2025-05-28T19:35:43.964+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:35:43.964
+SELECT          25µs SELECT EXISTS (SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid = 'default'))	caller=model/sqlite.go:42
+2025-05-28T19:35:53.965+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:35:53.965
+SELECT         778µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'init') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:35:53.965+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:35:53.965
+SELECT          72µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'retry') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:36:03.965+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:03.965
+SELECT         375µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'init') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:36:03.966+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:03.966
+SELECT          87µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'retry') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:36:05.000+08:00	[34;1m info [0;22m	ListResourceLogic: &{Page:1 PageSize:10 Type: TagUids:[] Keyword:}	caller=resources/list_resource_logic.go:31
+2025-05-28T19:36:05.001+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.001
+SELECT         528µs SELECT count(*) FROM resources AS r	caller=model/sqlite.go:42
+2025-05-28T19:36:05.003+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.003
+SELECT        1.579ms SELECT r.id, r.url, r.title, r.content, r.type, r.tags, r.created_at, r.updated_at FROM resources AS r ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:36:05.003+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.003
+SELECT         107µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.003+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.003
+SELECT         114µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.003+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.003
+SELECT          73µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.003+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.003
+SELECT         106µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.004+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.004
+SELECT          84µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.004+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.004
+SELECT          93µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.004+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.004
+SELECT          80µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.004+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.004
+SELECT          67µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.004+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.004
+SELECT          61µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.004+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.004
+SELECT          63µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.007+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/resources/list - 127.0.0.1:51365 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=6.7ms	caller=handler/loghandler.go:147	trace=e17b43c81be1e5ace4b18b8c8cbc039b	span=b889f5233d224df3
+2025-05-28T19:36:05.792+08:00	[34;1m info [0;22m	ListResourceLogic: &{Page:1 PageSize:10 Type: TagUids:[] Keyword:}	caller=resources/list_resource_logic.go:31
+2025-05-28T19:36:05.792+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.792
+SELECT         277µs SELECT count(*) FROM resources AS r	caller=model/sqlite.go:42
+2025-05-28T19:36:05.794+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.794
+SELECT        1.193ms SELECT r.id, r.url, r.title, r.content, r.type, r.tags, r.created_at, r.updated_at FROM resources AS r ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:36:05.794+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.794
+SELECT         109µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.794+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.794
+SELECT          69µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.794+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.794
+SELECT          65µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.794+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.794
+SELECT          67µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.794+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.794
+SELECT          62µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.794+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.794
+SELECT          62µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.794+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.794
+SELECT          71µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.794+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.794
+SELECT          64µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.794+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.794
+SELECT          63µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.795+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.795
+SELECT          97µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.795+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/resources/list - 127.0.0.1:51365 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	caller=handler/loghandler.go:147	trace=78ff85cb035ed77c99af5e3ff4a6e8be	span=e7a7720d56f52223	duration=3.7ms
+2025-05-28T19:36:05.993+08:00	[34;1m info [0;22m	ListResourceLogic: &{Page:1 PageSize:10 Type: TagUids:[] Keyword:}	caller=resources/list_resource_logic.go:31
+2025-05-28T19:36:05.993+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.993
+SELECT         266µs SELECT count(*) FROM resources AS r	caller=model/sqlite.go:42
+2025-05-28T19:36:05.995+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.995
+SELECT        1.345ms SELECT r.id, r.url, r.title, r.content, r.type, r.tags, r.created_at, r.updated_at FROM resources AS r ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:36:05.995+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.995
+SELECT         143µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.995+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.995
+SELECT          66µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.995+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.995
+SELECT          68µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.995+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.995
+SELECT          74µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.995+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.995
+SELECT          64µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.995+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.995
+SELECT          65µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.996+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.996
+SELECT          68µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.996+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.996
+SELECT          67µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.996+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.996
+SELECT          69µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.996+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:05.996
+SELECT          64µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:05.997+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/resources/list - 127.0.0.1:51365 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=3.7ms	caller=handler/loghandler.go:147	trace=b33fd7582fa05c476befd908a50364f1	span=d8c9a5e1b2ce6681
+2025-05-28T19:36:06.179+08:00	[34;1m info [0;22m	ListResourceLogic: &{Page:1 PageSize:10 Type: TagUids:[] Keyword:}	caller=resources/list_resource_logic.go:31
+2025-05-28T19:36:06.179+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.179
+SELECT         114µs SELECT count(*) FROM resources AS r	caller=model/sqlite.go:42
+2025-05-28T19:36:06.180+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.180
+SELECT         585µs SELECT r.id, r.url, r.title, r.content, r.type, r.tags, r.created_at, r.updated_at FROM resources AS r ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:36:06.180+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.180
+SELECT          50µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.180+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.180
+SELECT         203µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.180+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.180
+SELECT         252µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.181+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.181
+SELECT          43µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.181+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.181
+SELECT          33µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.181+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.181
+SELECT          31µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.181+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.181
+SELECT          30µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.181+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.181
+SELECT          31µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.181+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.181
+SELECT          30µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.181+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.181
+SELECT          29µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.181+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/resources/list - 127.0.0.1:51365 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=2.4ms	caller=handler/loghandler.go:147	trace=c4e47763afa8ff85d3290ec1a8236ed3	span=b378f26b721f1022
+2025-05-28T19:36:06.355+08:00	[34;1m info [0;22m	ListResourceLogic: &{Page:1 PageSize:10 Type: TagUids:[] Keyword:}	caller=resources/list_resource_logic.go:31
+2025-05-28T19:36:06.356+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.356
+SELECT         286µs SELECT count(*) FROM resources AS r	caller=model/sqlite.go:42
+2025-05-28T19:36:06.357+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.357
+SELECT        1.262ms SELECT r.id, r.url, r.title, r.content, r.type, r.tags, r.created_at, r.updated_at FROM resources AS r ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:36:06.357+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.357
+SELECT         120µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.357+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.357
+SELECT          74µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.358+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.358
+SELECT          68µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.358+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.358
+SELECT          70µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.358+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.358
+SELECT          75µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.358+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.358
+SELECT          68µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.358+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.358
+SELECT          62µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.358+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.358
+SELECT          94µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.358+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.358
+SELECT          61µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.358+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.358
+SELECT          65µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.359+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/resources/list - 127.0.0.1:51365 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	span=a929fd3b2091c044	duration=3.8ms	caller=handler/loghandler.go:147	trace=a2d183cbdabaeaee23137b03533fdc98
+2025-05-28T19:36:06.591+08:00	[34;1m info [0;22m	ListResourceLogic: &{Page:1 PageSize:10 Type: TagUids:[] Keyword:}	caller=resources/list_resource_logic.go:31
+2025-05-28T19:36:06.591+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.591
+SELECT         245µs SELECT count(*) FROM resources AS r	caller=model/sqlite.go:42
+2025-05-28T19:36:06.592+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.592
+SELECT        1.326ms SELECT r.id, r.url, r.title, r.content, r.type, r.tags, r.created_at, r.updated_at FROM resources AS r ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:36:06.593+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.593
+SELECT          98µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.593+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.593
+SELECT          68µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.593+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.593
+SELECT          63µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.593+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.593
+SELECT          66µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.593+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.593
+SELECT          70µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.593+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.593
+SELECT          61µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.593+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.593
+SELECT          61µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.593+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.593
+SELECT          66µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.593+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.593
+SELECT          66µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.593+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.593
+SELECT          62µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.594+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/resources/list - 127.0.0.1:51365 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=3.6ms	caller=handler/loghandler.go:147	trace=e0e9456d9518557b51660911ffc69d1f	span=a0ecb807a39d2d07
+2025-05-28T19:36:06.776+08:00	[34;1m info [0;22m	ListResourceLogic: &{Page:1 PageSize:10 Type: TagUids:[] Keyword:}	caller=resources/list_resource_logic.go:31
+2025-05-28T19:36:06.776+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.776
+SELECT         235µs SELECT count(*) FROM resources AS r	caller=model/sqlite.go:42
+2025-05-28T19:36:06.778+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.778
+SELECT        1.297ms SELECT r.id, r.url, r.title, r.content, r.type, r.tags, r.created_at, r.updated_at FROM resources AS r ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:36:06.778+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.778
+SELECT         121µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.778+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.778
+SELECT          68µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.778+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.778
+SELECT          68µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.778+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.778
+SELECT          67µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.778+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.778
+SELECT          62µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.778+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.778
+SELECT          64µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.778+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.778
+SELECT          63µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.779+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.779
+SELECT          67µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.779+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.779
+SELECT          61µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.779+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:06.779
+SELECT          62µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:06.779+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/resources/list - 127.0.0.1:51365 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	trace=0195b63cb7bd3d499a41e0f360bd9069	span=413a8e35f490a6b7	duration=3.7ms	caller=handler/loghandler.go:147
+2025-05-28T19:36:08.153+08:00	[34;1m info [0;22m	ListResourceLogic: &{Page:1 PageSize:10 Type: TagUids:[] Keyword:}	caller=resources/list_resource_logic.go:31
+2025-05-28T19:36:08.153+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.153
+SELECT         181µs SELECT count(*) FROM resources AS r	caller=model/sqlite.go:42
+2025-05-28T19:36:08.154+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.154
+SELECT         774µs SELECT r.id, r.url, r.title, r.content, r.type, r.tags, r.created_at, r.updated_at FROM resources AS r ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:36:08.154+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.154
+SELECT          61µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.154+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.154
+SELECT          42µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.154+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.154
+SELECT          43µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.154+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.154
+SELECT          49µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.154+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.154
+SELECT          38µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.154+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.154
+SELECT          37µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.154+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.154
+SELECT          39µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.154+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.154
+SELECT          42µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.154+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.154
+SELECT          37µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.154+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.154
+SELECT          36µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.155+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/resources/list - 127.0.0.1:51386 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=2.2ms	caller=handler/loghandler.go:147	trace=9628070cf45ad55ea7c1ae526ee19d2f	span=e7fb238e4be8f453
+2025-05-28T19:36:08.546+08:00	[34;1m info [0;22m	ListResourceLogic: &{Page:1 PageSize:10 Type: TagUids:[] Keyword:}	caller=resources/list_resource_logic.go:31
+2025-05-28T19:36:08.546+08:00	[34;1m info [0;22m	ListResourceLogic: &{Page:1 PageSize:10 Type: TagUids:[] Keyword:}	caller=resources/list_resource_logic.go:31
+2025-05-28T19:36:08.546+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.546
+SELECT         144µs SELECT count(*) FROM resources AS r	caller=model/sqlite.go:42
+2025-05-28T19:36:08.546+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.546
+SELECT         105µs SELECT count(*) FROM resources AS r	caller=model/sqlite.go:42
+2025-05-28T19:36:08.548+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.548
+SELECT        1.176ms SELECT r.id, r.url, r.title, r.content, r.type, r.tags, r.created_at, r.updated_at FROM resources AS r ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:36:08.549+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.549
+SELECT        2.209ms SELECT r.id, r.url, r.title, r.content, r.type, r.tags, r.created_at, r.updated_at FROM resources AS r ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:36:08.549+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.549
+SELECT        1.248ms SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.549+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.549
+SELECT         238µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.549+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.549
+SELECT         119µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.549+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.549
+SELECT         137µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.549+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.549
+SELECT         130µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.549+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.549
+SELECT          87µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.549+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.549
+SELECT         109µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.549+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.549
+SELECT          99µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.550+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.550
+SELECT         111µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.550+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.550
+SELECT         105µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.550+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.550
+SELECT         116µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.550+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.550
+SELECT         107µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.550+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.550
+SELECT         107µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.550+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.550
+SELECT         109µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.550+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.550
+SELECT         104µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.550+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.550
+SELECT         111µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.550+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.550
+SELECT         109µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.550+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.550
+SELECT         107µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.550+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.550
+SELECT         109µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.550+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.550
+SELECT         100µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.551+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/resources/list - 127.0.0.1:51386 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=4.5ms	caller=handler/loghandler.go:147	trace=245370217e13be273d894cf84700f5af	span=1e1acb30d64265d5
+2025-05-28T19:36:08.551+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/resources/list - 127.0.0.1:51390 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	duration=4.4ms	caller=handler/loghandler.go:147	trace=35baffca81db61b9916f4132b116b3c4	span=45f5f19cd351e3de
+2025-05-28T19:36:08.841+08:00	[34;1m info [0;22m	ListResourceLogic: &{Page:1 PageSize:10 Type: TagUids:[] Keyword:}	caller=resources/list_resource_logic.go:31
+2025-05-28T19:36:08.841+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.841
+SELECT         236µs SELECT count(*) FROM resources AS r	caller=model/sqlite.go:42
+2025-05-28T19:36:08.842+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.842
+SELECT         1.12ms SELECT r.id, r.url, r.title, r.content, r.type, r.tags, r.created_at, r.updated_at FROM resources AS r ORDER BY created_at DESC LIMIT 10	caller=model/sqlite.go:42
+2025-05-28T19:36:08.843+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.842
+SELECT         110µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.843+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.843
+SELECT          64µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.843+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.843
+SELECT          62µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.843+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.843
+SELECT          67µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.843+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.843
+SELECT          62µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.843+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.843
+SELECT          63µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.843+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.843
+SELECT          62µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.843+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.843
+SELECT          64µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.843+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.843
+SELECT          61µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.843+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:08.843
+SELECT          61µs SELECT t.id, t.uid, t.name, t.description, t.color, t.icon, t.created_at, t.updated_at FROM tags AS t WHERE (uid IN (''))	caller=model/sqlite.go:42
+2025-05-28T19:36:08.844+08:00	[34;1m info [0;22m	[HTTP] [42;97;1m 200 [0;0;22m - [46;97;1m POST [0;0;22m /wise/api/resources/list - 127.0.0.1:51390 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0	span=554210b7daca6c3a	duration=3.2ms	caller=handler/loghandler.go:147	trace=05cbc6bdc5f59a4c9210544964b06172
+2025-05-28T19:36:13.964+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:13.964
+SELECT         403µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'init') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:36:13.964+08:00	[34;1m info [0;22m	[SQL] [bun] | 19:36:13.964
+SELECT         166µs SELECT t.id, t.tid, t.name, t.types, t.status, t.current_state, t.total_steps, t.current_step, t.retry_count, t.params, t.result, t.duration, t.error, t.extend, t.created_at, t.updated_at FROM tasks AS t WHERE (status = 'retry') LIMIT 2	caller=model/sqlite.go:42
+2025-05-28T19:36:19.521+08:00	[34;1m info [0;22m	Got signal 2, shutting down...	caller=proc/shutdown.go:84

@@ -6,7 +6,7 @@ Log:
   Level: debug
   Mode: file
   Encoding: plain
-  Path: ./app/log
+  Path: ./logs
 
 Task:
   PoolSize: 2

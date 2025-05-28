@@ -1,8 +1,4 @@
 FROM docker.m.daocloud.io/golang:alpine AS builder
-# docker buildx build --platform linux/amd64 -t wise:v1.0.0-beta1-0528-01 --load .
-# docker tag ea33add688c2 registry.cn-hangzhou.aliyuncs.com/jenkins_construct_images/wise:v1.0.0-beta1-0528-04
-# docker push registry.cn-hangzhou.aliyuncs.com/jenkins_construct_images/wise:v1.0.0-beta1-0528-04
-# goctl kube deploy --name wise-back --namespace wise --port 8888 --o wise-back-deploy.yaml
 LABEL stage=gobuilder
 
 ENV CGO_ENABLED 0
@@ -20,7 +16,7 @@ COPY . .
 RUN go build -ldflags="-s -w" -o /app/wise wise.go
 
 
-FROM scratch
+FROM docker.m.daocloud.io/golang:alpine
 
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=builder /usr/share/zoneinfo/Asia/Shanghai /usr/share/zoneinfo/Asia/Shanghai
