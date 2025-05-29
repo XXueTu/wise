@@ -25,6 +25,15 @@ func NewPattern() *Pattern {
 	return p
 }
 
+func (p *Pattern) GetPatternTypes(url string) string {
+	for k := range p.patternMap {
+		if p.patternMap[k].Identification(url) {
+			return k
+		}
+	}
+	return "unknown"
+}
+
 func (p *Pattern) GetPattern(url string) (string, string, error) {
 	for k, v := range p.patternMap {
 		logx.Infof("spider name:%s,url:%s", k, url)

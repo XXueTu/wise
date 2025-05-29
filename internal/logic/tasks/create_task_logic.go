@@ -28,7 +28,7 @@ func NewCreateTaskLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreateTaskLogic) CreateTask(req *types.CreateTaskRequest) (resp *types.CreateTaskResponse, err error) {
-	taskArgs := task.UrlMarkTaskArgs{}
+	taskArgs := task.Args{}
 	err = json.Unmarshal([]byte(req.Params), &taskArgs)
 	if err != nil {
 		return nil, err

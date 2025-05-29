@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/zeromicro/go-zero/core/logx"
 
@@ -51,8 +52,12 @@ func (l *UrlLogic) Url(req *types.URLRequest) (resp *types.URLResponse, err erro
 	resp.Tag = []string{"微信公众号"}
 	logx.Info("url response:", resp)
 
-	err = task.CreateUrlMarkTask(l.ctx, l.svcCtx, task.UrlMarkTaskArgs{
+	args := task.UrlMarkTaskArgs{
 		Url: req.URL,
+	}
+	argsJson, err := json.Marshal(args)
+	err = task.CreateUrlMarkTask(l.ctx, l.svcCtx, task.Args{
+		Params: string(argsJson),
 	})
 	if err != nil {
 		return resp, err

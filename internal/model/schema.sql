@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS resources (
     description TEXT NOT NULL,
     type TEXT NOT NULL,
     url TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
-    updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))
+    created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')),
+    updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime'))
 );
 
 -- 模型表
@@ -17,8 +17,8 @@ CREATE TABLE IF NOT EXISTS models (
     `name` TEXT NOT NULL,
     description TEXT NOT NULL,
     `type` TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
-    updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))
+    created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')),
+    updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime'))
 );
 
 -- 标签表
@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS tags (
     description TEXT NOT NULL,
     color TEXT NOT NULL,
     icon TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
-    updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))
+    created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')),
+    updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime'))
 );
 
 -- 任务表
@@ -49,8 +49,8 @@ CREATE TABLE IF NOT EXISTS tasks (
     duration INTEGER NOT NULL,
     error TEXT NOT NULL,
     extend TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
-    updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))
+    created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')),
+    updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime'))
 );
 
 -- 任务计划表
@@ -58,6 +58,8 @@ CREATE TABLE IF NOT EXISTS task_plans (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     tid TEXT NOT NULL,
     pid TEXT NOT NULL,
+    before_pid TEXT NOT NULL,
+    next TEXT NOT NULL,
     types TEXT NOT NULL,
     `name` TEXT NOT NULL,
     `index` INTEGER NOT NULL,
@@ -66,6 +68,6 @@ CREATE TABLE IF NOT EXISTS task_plans (
     result TEXT NOT NULL,
     duration INTEGER NOT NULL,
     error TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),
-    updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime'))
-); 
+    created_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')),
+    updated_at TIMESTAMP NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime'))
+);

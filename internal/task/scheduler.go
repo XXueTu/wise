@@ -2,7 +2,6 @@ package task
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"sync"
 	"time"
@@ -16,12 +15,20 @@ import (
 )
 
 // State 状态机状态函数
-type State[F any, T any] func(ctx context.Context, args F) (F, State[F, T], error)
+type State[T any] func(ctx context.Context, args Args) (Args, State[T], error)
 
 // StateInfo 状态信息
 type StateInfo struct {
 	Code string // 状态代码
 	Name string // 状态名称
+}
+
+// Args 任务参数
+type Args struct {
+	Tid    string `json:"tid"`
+	Params string `json:"params"` // 参数
+	Result string `json:"result"` // 结果
+	Next   string `json:"next"`   // 下一个状态
 }
 
 // TaskExecutor 任务执行器接口
@@ -39,23 +46,23 @@ type TaskExecutor interface {
 }
 
 // StateMachine 状态机基类
-type StateMachine[F any, T any] struct {
+type StateMachine[T any] struct {
 	svc      *svc.ServiceContext
-	stateMap map[string]State[F, T]
+	stateMap map[string]State[T]
 	states   []StateInfo
 }
 
 // NewStateMachine 创建状态机
-func NewStateMachine[F any, T any](svc *svc.ServiceContext) *StateMachine[F, T] {
-	return &StateMachine[F, T]{
+func NewStateMachine[T any](svc *svc.ServiceContext) *StateMachine[T] {
+	return &StateMachine[T]{
 		svc:      svc,
-		stateMap: make(map[string]State[F, T]),
+		stateMap: make(map[string]State[T]),
 		states:   make([]StateInfo, 0),
 	}
 }
 
 // RegisterState 注册状态
-func (m *StateMachine[F, T]) RegisterState(code string, name string, state State[F, T]) {
+func (m *StateMachine[T]) RegisterState(code string, name string, state State[T]) {
 	m.stateMap[code] = state
 	m.states = append(m.states, StateInfo{
 		Code: code,
@@ -64,22 +71,19 @@ func (m *StateMachine[F, T]) RegisterState(code string, name string, state State
 }
 
 // Run 运行状态机
-func (m *StateMachine[F, T]) Run(ctx context.Context, tid string, params string, startState string) error {
+func (m *StateMachine[T]) Run(ctx context.Context, tid string, params string, startState string) error {
+	logx.Infof("运行参数: %s, %s, %s", tid, params, startState)
 	current := m.stateMap[startState]
 	if current == nil {
 		return errors.New("初始状态不存在: " + startState)
 	}
 
 	stateCode := startState
-	var args F
+	var args Args
 	var err error
-
-	// 解析参数
-	if err := json.Unmarshal([]byte(params), &args); err != nil {
-		logx.Errorf("解析任务参数失败: %v", err)
-		return errors.New("解析任务参数失败" + err.Error())
-	}
-
+	args.Tid = tid
+	args.Params = params
+	args.Result = "{}"
 	// 查询任务执行计划
 	plans, err := m.svc.TaskPlansModel.GetByTid(ctx, tid)
 	if err != nil {
@@ -91,9 +95,11 @@ func (m *StateMachine[F, T]) Run(ctx context.Context, tid string, params string,
 		return errors.New("任务执行计划为空")
 	}
 
-	plansMap := make(map[string]*model.TaskPlans)
+	plansStateMap := make(map[string]*model.TaskPlans)
+	plansPidMap := make(map[string]*model.TaskPlans)
 	for _, plan := range plans {
-		plansMap[plan.Types] = plan
+		plansStateMap[plan.Types] = plan
+		plansPidMap[plan.Pid] = plan
 		logx.Infof("任务执行计划: types: %s, tid: %s", plan.Types, plan.Tid)
 	}
 
@@ -103,20 +109,35 @@ func (m *StateMachine[F, T]) Run(ctx context.Context, tid string, params string,
 		startTime := time.Now()
 
 		// 更新任务状态
-		plan := plansMap[stateCode]
+		plan := plansStateMap[stateCode]
 		if plan == nil {
 			logx.Errorf("当前状态不存在: %s", stateCode)
 			return errors.New("当前状态不存在" + stateCode)
 		}
+		if plan.BeforePid != "" {
+			// 查询上一个任务结果
+			beforePlan, err := m.svc.TaskPlansModel.GetByPid(ctx, plan.BeforePid)
+			if err != nil {
+				logx.Errorf("查询上一个任务结果失败: %v", err)
+				return errors.New("查询上一个任务结果失败" + err.Error())
+			}
+			if beforePlan == nil {
+				logx.Errorf("上一个任务结果不存在: %v", plan.BeforePid)
+				return errors.New("上一个任务结果不存在" + plan.BeforePid)
+			}
+			args.Params = beforePlan.Result
+		}
 
 		// 更新计划状态为运行中
 		plan.Status = model.TaskPlanStatusRunning
+		plan.Error = "{}"
 		if err := m.svc.TaskPlansModel.Update(ctx, plan); err != nil {
 			logx.Errorf("更新任务计划状态失败: %v", err)
 			return err
 		}
 
 		// 执行状态
+		logx.Infof("执行状态: %+v", args)
 		args, current, err = current(ctx, args)
 		if err != nil {
 			logx.Errorf("执行状态失败: %+v", err)
@@ -128,8 +149,8 @@ func (m *StateMachine[F, T]) Run(ctx context.Context, tid string, params string,
 			}
 			return errors.New("执行状态失败" + err.Error())
 		}
-
-		// 更新计划状态为成功
+		plan.Params = args.Params
+		plan.Result = args.Result
 		plan.Status = model.TaskPlanStatusSuccess
 		plan.Duration = time.Since(startTime).Milliseconds()
 		if err := m.svc.TaskPlansModel.Update(ctx, plan); err != nil {
@@ -150,29 +171,7 @@ func (m *StateMachine[F, T]) Run(ctx context.Context, tid string, params string,
 		}
 
 		// 获取下一个状态
-		nextState := ""
-		if argsWithNext, ok := any(args).(interface{ GetNextState() string }); ok {
-			nextState = argsWithNext.GetNextState()
-		}
-
-		// 验证下一个状态
-		if nextState == "" {
-			logx.Infof("没有下一个状态，任务执行结束: %s", tid)
-			break
-		}
-
-		// 验证状态是否存在
-		if _, exists := m.stateMap[nextState]; !exists {
-			logx.Errorf("下一个状态不存在: %s", nextState)
-			return errors.New("下一个状态不存在" + nextState)
-		}
-
-		// 验证状态是否在计划中
-		if _, exists := plansMap[nextState]; !exists {
-			logx.Errorf("下一个状态不在计划中: %s", nextState)
-			return errors.New("下一个状态不在计划中" + nextState)
-		}
-
+		nextState := plansPidMap[plan.Pid].Next
 		stateCode = nextState
 	}
 
@@ -180,15 +179,11 @@ func (m *StateMachine[F, T]) Run(ctx context.Context, tid string, params string,
 }
 
 // CreateTask 创建任务
-func (m *StateMachine[F, T]) CreateTask(ctx context.Context, args F, taskName string, taskType string) error {
-	argsJson, err := json.Marshal(args)
-	if err != nil {
-		return err
-	}
+func (m *StateMachine[T]) CreateTask(ctx context.Context, args Args, taskName string, taskType string) error {
 
 	tid := uuid.New().String()
 	// 创建任务
-	err = m.svc.TasksModel.Create(ctx, &model.Tasks{
+	err := m.svc.TasksModel.Create(ctx, &model.Tasks{
 		Tid:          tid,
 		Name:         taskName,
 		Types:        taskType,
@@ -197,7 +192,7 @@ func (m *StateMachine[F, T]) CreateTask(ctx context.Context, args F, taskName st
 		RetryCount:   0,
 		TotalSteps:   int64(len(m.states)),
 		CurrentStep:  1,
-		Params:       string(argsJson),
+		Params:       args.Params,
 		Result:       "{}",
 		Duration:     0,
 		Error:        "{}",
@@ -208,20 +203,29 @@ func (m *StateMachine[F, T]) CreateTask(ctx context.Context, args F, taskName st
 	}
 
 	// 批量创建计划
+	beforePid := ""
 	plans := make([]model.TaskPlans, 0)
 	for i, state := range m.states {
+		nextType := ""
+		if i < len(m.states)-1 {
+			nextType = m.states[i+1].Code
+		}
+		pid := uuid.New().String()
 		plans = append(plans, model.TaskPlans{
-			Tid:      tid,
-			Pid:      uuid.New().String(),
-			Types:    state.Code,
-			Name:     state.Name,
-			Index:    int64(i + 1),
-			Status:   model.TaskPlanStatusInit,
-			Params:   string(argsJson),
-			Result:   "{}",
-			Duration: 0,
-			Error:    "{}",
+			Tid:       tid,
+			Pid:       pid,
+			BeforePid: beforePid,
+			Next:      nextType,
+			Types:     state.Code,
+			Name:      state.Name,
+			Index:     int64(i + 1),
+			Status:    model.TaskPlanStatusInit,
+			Params:    args.Params,
+			Result:    "{}",
+			Duration:  0,
+			Error:     "{}",
 		})
+		beforePid = pid
 	}
 	return m.svc.TaskPlansModel.CreateBatch(ctx, plans)
 }
