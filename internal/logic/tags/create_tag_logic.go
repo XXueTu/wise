@@ -5,7 +5,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/zeromicro/go-zero/core/logx"
 
 	"github.com/XXueTu/wise/internal/model"
@@ -37,7 +36,7 @@ func (l *CreateTagLogic) CreateTag(req *types.CreateTagRequest) (resp *types.Cre
 	if tag != nil {
 		return nil, errors.New("标签已经存在")
 	}
-	uid := uuid.New().String()
+	uid := model.GenUid()
 	tag = &model.Tags{
 		Uid:         uid,
 		Name:        req.Name,

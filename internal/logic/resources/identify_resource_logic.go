@@ -2,7 +2,6 @@ package resources
 
 import (
 	"context"
-	"encoding/json"
 	"strings"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -10,6 +9,7 @@ import (
 	"github.com/XXueTu/wise/internal/svc"
 	"github.com/XXueTu/wise/internal/task"
 	"github.com/XXueTu/wise/internal/types"
+	"github.com/XXueTu/wise/pkg/agent/url_analyse.go"
 )
 
 type IdentifyResourceLogic struct {
@@ -37,17 +37,7 @@ func (l *IdentifyResourceLogic) IdentifyResource(req *types.IdentifyResourceRequ
 		if url == "" {
 			continue
 		}
-		args := task.UrlMarkTaskArgs{
-			Url: url,
-		}
-		argsJson, err := json.Marshal(args)
-
-		err = task.CreateUrlMarkTask(l.ctx, l.svcCtx, task.Args{
-			Params: string(argsJson),
-		})
-		if err != nil {
-			return resp, err
-		}
+		_ = task.CreateTask(l.ctx, l.svcCtx, url, "解析URL", "URL_ANALYSE", int64(len(url_analyse.UrlAnalyseSteps)))
 		resp.Urls = append(resp.Urls, url)
 	}
 	logx.Info("identify resource urls:", strings.Join(resp.Urls, ","))

@@ -2,13 +2,10 @@ package tasks
 
 import (
 	"context"
-	"encoding/json"
-	"errors"
 
 	"github.com/zeromicro/go-zero/core/logx"
 
 	"github.com/XXueTu/wise/internal/svc"
-	"github.com/XXueTu/wise/internal/task"
 	"github.com/XXueTu/wise/internal/types"
 )
 
@@ -28,14 +25,6 @@ func NewCreateTaskLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 }
 
 func (l *CreateTaskLogic) CreateTask(req *types.CreateTaskRequest) (resp *types.CreateTaskResponse, err error) {
-	taskArgs := task.Args{}
-	err = json.Unmarshal([]byte(req.Params), &taskArgs)
-	if err != nil {
-		return nil, err
-	}
-	err = task.CreateUrlMarkTask(l.ctx, l.svcCtx, taskArgs)
-	if err != nil {
-		return nil, errors.New("创建任务失败")
-	}
+
 	return
 }

@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS resources (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     url TEXT NOT NULL, -- 资源URL
     title TEXT NOT NULL, -- 资源标题
+    describe TEXT NOT NULL, -- 资源描述
     content TEXT NOT NULL, -- 资源内容
     type TEXT NOT NULL, -- 资源类型（如：wechat, zhihu等）
     tags TEXT NOT NULL, -- 资源标签

@@ -5,7 +5,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/zeromicro/go-zero/core/logx"
 
 	"github.com/XXueTu/wise/internal/model"
@@ -51,7 +50,7 @@ func (l *CreateBatchTagLogic) CreateBatchTag(req *types.CreateBatchTagRequest) (
 		if _, exist := existTagMap[tag.Name]; !exist {
 			notExistTags = append(notExistTags, model.Tags{
 				Name:        tag.Name,
-				Uid:         uuid.New().String(),
+				Uid:         model.GenUid(),
 				Description: tag.Description,
 				Color:       tag.Color,
 				Icon:        tag.Icon,

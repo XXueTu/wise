@@ -217,6 +217,7 @@ type Resource struct {
 	Id        int64    `json:"id"`         // 主键
 	URL       string   `json:"url"`        // URL链接
 	Title     string   `json:"title"`      // 标题
+	Describe  string   `json:"describe"`   // 描述
 	Content   string   `json:"content"`    // 内容
 	Type      string   `json:"type"`       // 类型
 	Tags      []string `json:"tags"`       // 标签

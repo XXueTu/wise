@@ -34,6 +34,7 @@ func (p *Pattern) GetPatternTypes(url string) string {
 	return "unknown"
 }
 
+// title content error
 func (p *Pattern) GetPattern(url string) (string, string, error) {
 	for k, v := range p.patternMap {
 		logx.Infof("spider name:%s,url:%s", k, url)
@@ -41,5 +42,6 @@ func (p *Pattern) GetPattern(url string) (string, string, error) {
 			return v.GetData(url)
 		}
 	}
+	// title content error
 	return "unknown", "unknown", errors.New("not supported spider")
 }

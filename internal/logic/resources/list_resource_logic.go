@@ -38,19 +38,22 @@ func (l *ListResourceLogic) ListResource(req *types.ListResourceRequest) (resp *
 		Resources: make([]types.Resource, len(resources.List)),
 	}
 	for i, resource := range resources.List {
-		// 获取标签
-		tagList, err := l.svcCtx.TagsModel.GetUids(l.ctx, strings.Split(resource.Tags, ","))
-		if err != nil {
-			return nil, errors.New("获取标签失败")
-		}
 		var tags []string
-		for _, tag := range tagList {
-			tags = append(tags, tag.Name)
+		if resource.Tags != "" {
+			// 获取标签
+			tagList, err := l.svcCtx.TagsModel.GetUids(l.ctx, strings.Split(resource.Tags, ","))
+			if err != nil {
+				return nil, errors.New("获取标签失败")
+			}
+			for _, tag := range tagList {
+				tags = append(tags, tag.Name)
+			}
 		}
 		resp.Resources[i] = types.Resource{
 			Id:        resource.ID,
 			URL:       resource.URL,
 			Title:     resource.Title,
+			Describe:  resource.Describe,
 			Content:   resource.Content,
 			Type:      resource.Type,
 			Tags:      tags,

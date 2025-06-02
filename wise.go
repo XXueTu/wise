@@ -12,6 +12,7 @@ import (
 	"github.com/XXueTu/wise/internal/handler"
 	"github.com/XXueTu/wise/internal/svc"
 	"github.com/XXueTu/wise/internal/task"
+	"github.com/XXueTu/wise/pkg/agent/url_analyse.go"
 )
 
 var configFile = flag.String("f", "etc/wise-api.yaml", "the config file")
@@ -47,7 +48,10 @@ func main() {
 	handler.RegisterHandlers(server, ctx)
 
 	// 初始化任务调度器
-	task.InitScheduler(ctx)
+	task.NewTaskScheduler(ctx).Start()
+
+	// 初始化url分析图
+	_ = url_analyse.BuildAnalysisGraph(ctx)
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)
 	server.Start()
